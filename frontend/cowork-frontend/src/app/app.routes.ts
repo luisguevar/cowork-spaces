@@ -15,7 +15,6 @@ export const routes: Routes = [
   },
   {
     path: 'spaces',
-    canActivate: [authGuard],
     loadComponent: () =>
       import('./features/spaces/space-list/space-list.component')
         .then(m => m.SpaceListComponent)
@@ -29,7 +28,6 @@ export const routes: Routes = [
   },
   {
     path: 'bookings',
-    canActivate: [authGuard],
     loadComponent: () =>
       import('./features/bookings/booking-list/booking-list.component')
         .then(m => m.BookingListComponent)
@@ -50,6 +48,6 @@ export const routes: Routes = [
   },
   {
     path: '**',
-    redirectTo: 'login'
+    redirectTo: 'spaces'
   }
 ];

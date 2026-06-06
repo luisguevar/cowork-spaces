@@ -1,7 +1,7 @@
 ﻿using CoWork.Application.DTOs;
 using CoWork.Application.Services;
 using Microsoft.AspNetCore.Mvc;
-
+using Microsoft.AspNetCore.Authorization;
 namespace CoWork.API.Controllers;
 
 [ApiController]
@@ -36,9 +36,11 @@ public class BookingsController : ControllerBase
     }
 
     [HttpPost]
+    [Authorize]
     [ProducesResponseType(typeof(BookingResponse), StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status409Conflict)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     public async Task<IActionResult> Create([FromBody] CreateBookingRequest request)
     {
         var booking = await _bookingService.CreateAsync(request);
@@ -54,9 +56,11 @@ public class BookingsController : ControllerBase
     }
 
     [HttpPatch("{id:int}/cancel")]
+    [Authorize]
     [ProducesResponseType(typeof(CancelBookingResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     public async Task<IActionResult> Cancel(int id)
     {
         var result = await _bookingService.CancelAsync(id);

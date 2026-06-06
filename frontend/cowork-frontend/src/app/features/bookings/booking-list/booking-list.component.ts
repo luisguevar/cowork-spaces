@@ -14,6 +14,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatDividerModule } from '@angular/material/divider';
 import { Space } from '../../../core/models/space.model';
 import { SpaceService } from '../../../core/services/space.service';
+import { AuthService } from '../../../core/services/auth.service';
 
 @Component({
   selector: 'app-booking-list',
@@ -23,7 +24,7 @@ import { SpaceService } from '../../../core/services/space.service';
     MatTableModule,
     MatButtonModule,
     MatChipsModule,
-/*     RouterLink, */
+    /*     RouterLink, */
     MatIconModule,
     MatProgressSpinnerModule,
     MatDialogModule,
@@ -35,7 +36,7 @@ import { SpaceService } from '../../../core/services/space.service';
   styleUrls: ['booking-list.component.scss']
 })
 export class BookingListComponent implements OnInit {
-  
+
   bookings: Booking[] = [];
   dataSource = new MatTableDataSource<Booking>([]);
   columns = ['id', 'createdAt', 'space', 'user', 'date', 'startTime', 'endTime', 'finalPrice', 'status', 'actions'];
@@ -61,7 +62,8 @@ export class BookingListComponent implements OnInit {
     private bookingService: BookingService,
     private spaceService: SpaceService,
     private dialog: MatDialog,
-    private router: Router
+    private router: Router,
+    public authService: AuthService
   ) { }
 
   ngOnInit(): void {

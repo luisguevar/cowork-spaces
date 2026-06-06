@@ -12,57 +12,52 @@
 <div *ngIf="error" class="error-message">{{ error }}</div>
 
 <div class="table-scroll" *ngIf="!loading">
-<mat-table [dataSource]="dataSource" class="mat-elevation-z2 spaces-table">
+    <mat-table [dataSource]="dataSource" class="mat-elevation-z2 spaces-table">
 
-    <ng-container matColumnDef="name">
-        <mat-header-cell *matHeaderCellDef>Nombre</mat-header-cell>
-        <mat-cell *matCellDef="let s">{{ s.name }}</mat-cell>
-    </ng-container>
+        <ng-container matColumnDef="name">
+            <mat-header-cell *matHeaderCellDef>Nombre</mat-header-cell>
+            <mat-cell *matCellDef="let s">{{ s.name }}</mat-cell>
+        </ng-container>
 
-    <ng-container matColumnDef="capacity">
-        <mat-header-cell *matHeaderCellDef>Capacidad</mat-header-cell>
-        <mat-cell *matCellDef="let s">{{ s.capacity }} personas</mat-cell>
-    </ng-container>
+        <ng-container matColumnDef="capacity">
+            <mat-header-cell *matHeaderCellDef>Capacidad</mat-header-cell>
+            <mat-cell *matCellDef="let s">{{ s.capacity }} personas</mat-cell>
+        </ng-container>
 
-    <ng-container matColumnDef="hourlyRate">
-        <mat-header-cell *matHeaderCellDef>Tarifa por hora</mat-header-cell>
-        <mat-cell *matCellDef="let s">{{ s.hourlyRate | currency:'PEN ':'symbol' }}</mat-cell>
-    </ng-container>
+        <ng-container matColumnDef="hourlyRate">
+            <mat-header-cell *matHeaderCellDef>Tarifa por hora</mat-header-cell>
+            <mat-cell *matCellDef="let s">{{ s.hourlyRate | currency:'PEN ':'symbol' }}</mat-cell>
+        </ng-container>
 
-    <ng-container matColumnDef="hours">
-        <mat-header-cell *matHeaderCellDef>Horario</mat-header-cell>
-        <mat-cell *matCellDef="let s">{{ s.openingTime }} - {{ s.closingTime }}</mat-cell>
-    </ng-container>
+        <ng-container matColumnDef="hours">
+            <mat-header-cell *matHeaderCellDef>Horario</mat-header-cell>
+            <mat-cell *matCellDef="let s">{{ s.openingTime }} - {{ s.closingTime }}</mat-cell>
+        </ng-container>
 
-    <ng-container matColumnDef="status">
-        <mat-header-cell *matHeaderCellDef>Estado</mat-header-cell>
-        <mat-cell *matCellDef="let s">
-            <mat-chip [class]="s.status === 'active' ? 'chip-active' : 'chip-maintenance'">
-               {{getStatusName(s.status)}}
-            </mat-chip>
-        </mat-cell>
-    </ng-container>
+        <ng-container matColumnDef="status">
+            <mat-header-cell *matHeaderCellDef>Estado</mat-header-cell>
+            <mat-cell *matCellDef="let s">
+                <mat-chip [class]="s.status === 'active' ? 'chip-active' : 'chip-maintenance'">
+                    {{getStatusName(s.status)}}
+                </mat-chip>
+            </mat-cell>
+        </ng-container>
 
-    <ng-container matColumnDef="actions">
-        <mat-header-cell *matHeaderCellDef>Acciones</mat-header-cell>
-        <mat-cell *matCellDef="let s">
-           <!--  <a mat-button color="primary" routerLink="/bookings/new" [queryParams]="{ spaceId: s.id }">
-                Reservar
-            </a> -->
-            <button mat-button color="warn" *ngIf="s.status === 'active'" (click)="deactivate(s.id)">
-                Desactivar
-            </button>
-        </mat-cell>
-    </ng-container>
+        <ng-container matColumnDef="actions">
+            <mat-header-cell *matHeaderCellDef>Acciones</mat-header-cell>
+            <mat-cell *matCellDef="let s">
 
-    <mat-header-row *matHeaderRowDef="columns" />
-    <mat-row *matRowDef="let row; columns: columns;" />
-</mat-table>
+                <button [disabled]="!authService.isLoggedIn()" mat-button color="warn" *ngIf="s.status === 'active'" (click)="deactivate(s.id)">
+                    Desactivar
+                </button>
+            </mat-cell>
+        </ng-container>
+
+        <mat-header-row *matHeaderRowDef="columns" />
+        <mat-row *matRowDef="let row; columns: columns;" />
+    </mat-table>
 </div>
 
-<mat-paginator *ngIf="!loading && dataSource.data.length"
-    [pageSize]="10"
-    [pageSizeOptions]="[5, 10, 20]"
-    showFirstLastButtons
-    aria-label="Paginacion de ambientes">
+<mat-paginator *ngIf="!loading && dataSource.data.length" [pageSize]="10" [pageSizeOptions]="[5, 10, 20]"
+    showFirstLastButtons aria-label="Paginacion de ambientes">
 </mat-paginator>
