@@ -9,6 +9,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { SpaceService } from '../../../core/services/space.service';
 import { Space } from '../../../core/models/space.model';
+import { AuthService } from '../../../core/services/auth.service';
 
 @Component({
   selector: 'app-space-list',
@@ -43,7 +44,7 @@ export class SpaceListComponent implements OnInit {
     }
   }
 
-  constructor(private spaceService: SpaceService) { }
+  constructor(private spaceService: SpaceService, public authService: AuthService) { }
 
   ngOnInit(): void {
     this.loadSpaces();

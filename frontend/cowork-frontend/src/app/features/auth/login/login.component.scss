@@ -1,0 +1,40 @@
+.card-content {
+    margin-top: 10px !important;
+}
+
+.login-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 80vh;
+}
+
+.login-card {
+    width: 400px;
+    padding: 16px;
+}
+
+.full-width {
+    width: 100%;
+    margin-bottom: 8px;
+}
+
+.login-btn {
+    margin-top: 8px;
+    height: 44px;
+}
+
+.error-message {
+    color: red;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 16px;
+}
+
+.hint {
+    padding: 16px;
+    text-align: center;
+    font-size: 0.8em;
+    color: #666;
+}

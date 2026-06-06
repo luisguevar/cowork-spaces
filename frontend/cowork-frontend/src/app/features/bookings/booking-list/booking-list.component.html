@@ -111,7 +111,7 @@
                 <ng-container matColumnDef="actions">
                     <mat-header-cell *matHeaderCellDef>Acciones</mat-header-cell>
                     <mat-cell *matCellDef="let b">
-                        <button mat-button color="warn" *ngIf="b.status === 'Confirmed' || b.status === 'Pending'"
+                        <button [disabled]="!authService.isLoggedIn()" mat-button color="warn" *ngIf="b.status === 'Confirmed' || b.status === 'Pending'"
                             (click)="cancelBooking(b)">
                             Cancelar
                         </button>

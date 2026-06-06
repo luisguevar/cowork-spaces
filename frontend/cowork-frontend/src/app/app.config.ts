@@ -5,6 +5,7 @@ import { provideAnimationsAsync } from '@angular/platform-browser/animations/asy
 import { MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
 import { routes } from './app.routes';
 import { errorInterceptor } from './core/interceptors/error-interceptor';
+import { authInterceptor } from './core/interceptors/auth.interceptor';
 
 const ES_DATE_FORMATS = {
   parse: {
@@ -22,9 +23,7 @@ export const appConfig: ApplicationConfig = {
   providers: [
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(routes),
-    provideHttpClient(withInterceptors([errorInterceptor])),
-    provideAnimationsAsync(),
-    { provide: MAT_DATE_LOCALE, useValue: 'es-ES' },
-    { provide: MAT_DATE_FORMATS, useValue: ES_DATE_FORMATS }
+    provideHttpClient(withInterceptors([authInterceptor, errorInterceptor])),
+    provideAnimationsAsync()
   ]
 };

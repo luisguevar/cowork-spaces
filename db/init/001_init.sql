@@ -48,6 +48,7 @@ CREATE TABLE Users (
     Id          INT             NOT NULL IDENTITY(1,1),
     Name        NVARCHAR(100)   NOT NULL,
     Email       NVARCHAR(150)   NOT NULL,
+    PasswordHash  NVARCHAR(255)   NOT NULL DEFAULT '',
     CreatedAt   DATETIME2       NOT NULL DEFAULT GETUTCDATE(),
     UpdatedAt   DATETIME2       NOT NULL DEFAULT GETUTCDATE(),
     CONSTRAINT PK_Users         PRIMARY KEY (Id),
@@ -359,6 +360,20 @@ BEGIN
 END
 GO
 
+-- =============================================
+-- Stored Procedures: Login
+-- =============================================
+CREATE OR ALTER PROCEDURE sp_Login
+    @Email NVARCHAR(150)
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT Id, Name, Email, PasswordHash
+    FROM Users
+    WHERE Email = @Email;
+END
+GO
 
 -- =============================================
 -- Seed
@@ -372,20 +387,20 @@ DBCC CHECKIDENT ('Spaces',   RESEED, 1);
 DBCC CHECKIDENT ('Users',    RESEED, 1);
 GO
 
-INSERT INTO Users (Name, Email) VALUES
-('John Smith',    'john.smith@email.com'),
-('Maria Garcia',  'maria.garcia@email.com'),
-('Carlos Lopez',  'carlos.lopez@email.com'),
-('Ana Martinez',  'ana.martinez@email.com'),
-('Peter Johnson', 'peter.johnson@email.com');
+INSERT INTO Users (Name, Email, PasswordHash) VALUES
+('John Smith',    'john.smith@email.com', '$2a$11$msOTeYBOpJ2EtaRQ76tQA.YsEdpGk8zlpe84Q/0QqdLIqdArVYMru'),
+('Maria Garcia',  'maria.garcia@email.com', '$2a$11$msOTeYBOpJ2EtaRQ76tQA.YsEdpGk8zlpe84Q/0QqdLIqdArVYMru'),
+('Carlos Lopez',  'carlos.lopez@email.com', '$2a$11$msOTeYBOpJ2EtaRQ76tQA.YsEdpGk8zlpe84Q/0QqdLIqdArVYMru'),
+('Ana Martinez',  'ana.martinez@email.com', '$2a$11$msOTeYBOpJ2EtaRQ76tQA.YsEdpGk8zlpe84Q/0QqdLIqdArVYMru'),
+('Peter Johnson', 'peter.johnson@email.com', '$2a$11$msOTeYBOpJ2EtaRQ76tQA.YsEdpGk8zlpe84Q/0QqdLIqdArVYMru');
 GO
 
 INSERT INTO Spaces (Name, Capacity, HourlyRate, OpeningTime, ClosingTime, Status) VALUES
-('Board Room A',        10,     80.00,  '08:00', '20:00', 'active'),
-('Meeting Room B',      6,      50.00,  '08:00', '18:00', 'active'),
-('Creative Studio',     8,      65.00,  '09:00', '21:00', 'active'),
-('Focus Room 1',        2,      30.00,  '07:00', '22:00', 'active'),
-('Conference Hall',     30,     150.00, '08:00', '20:00', 'maintenance');
+('Sala Reunión A',        10,     80.00,  '08:00', '20:00', 'active'),
+('Sala Reunión B',      6,      50.00,  '08:00', '18:00', 'active'),
+('Centro Creativo A',     8,      65.00,  '09:00', '21:00', 'active'),
+('Centro Creativo B',        2,      30.00,  '07:00', '22:00', 'active'),
+('Auditorio General',     30,     150.00, '08:00', '20:00', 'maintenance');
 GO
 
 
@@ -398,10 +413,10 @@ DECLARE @U3 INT = (SELECT Id FROM Users WHERE Email = 'carlos.lopez@email.com');
 DECLARE @U4 INT = (SELECT Id FROM Users WHERE Email = 'ana.martinez@email.com');
 DECLARE @U5 INT = (SELECT Id FROM Users WHERE Email = 'peter.johnson@email.com');
 
-DECLARE @S1 INT = (SELECT Id FROM Spaces WHERE Name = 'Board Room A');
-DECLARE @S2 INT = (SELECT Id FROM Spaces WHERE Name = 'Meeting Room B');
-DECLARE @S3 INT = (SELECT Id FROM Spaces WHERE Name = 'Creative Studio');
-DECLARE @S4 INT = (SELECT Id FROM Spaces WHERE Name = 'Focus Room 1');
+DECLARE @S1 INT = (SELECT Id FROM Spaces WHERE Name = 'Sala Reunión A');
+DECLARE @S2 INT = (SELECT Id FROM Spaces WHERE Name = 'Sala Reunión B');
+DECLARE @S3 INT = (SELECT Id FROM Spaces WHERE Name = 'Centro Creativo A');
+DECLARE @S4 INT = (SELECT Id FROM Spaces WHERE Name = 'Auditorio General');
 
 INSERT INTO Bookings (SpaceId, UserId, StartTime, EndTime, Status, FinalPrice, RefundAmount) VALUES
 (@S1, @U1, DATEADD(HOUR, 9,  DATEADD(DAY, 1,  CAST(CAST(GETUTCDATE() AS DATE) AS DATETIME2))),

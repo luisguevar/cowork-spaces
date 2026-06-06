@@ -1,6 +1,13 @@
 import { Routes } from '@angular/router';
+import { authGuard } from './core/guards/auth.guard';
 
 export const routes: Routes = [
+  {
+    path: 'login',
+    loadComponent: () =>
+      import('./features/auth/login/login.component')
+        .then(m => m.LoginComponent)
+  },
   {
     path: '',
     redirectTo: 'spaces',
@@ -14,6 +21,7 @@ export const routes: Routes = [
   },
   {
     path: 'spaces/new',
+    canActivate: [authGuard],
     loadComponent: () =>
       import('./features/spaces/space-form/space-form.component')
         .then(m => m.SpaceFormComponent)
@@ -26,12 +34,14 @@ export const routes: Routes = [
   },
   {
     path: 'bookings/new',
+    canActivate: [authGuard],
     loadComponent: () =>
       import('./features/bookings/booking-form/booking-form.component')
         .then(m => m.BookingFormComponent)
   },
   {
     path: 'reports',
+    canActivate: [authGuard],
     loadComponent: () =>
       import('./features/reports/report-dashboard/report-dashboard.component')
         .then(m => m.ReportDashboardComponent)

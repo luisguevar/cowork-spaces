@@ -1,7 +1,7 @@
 using CoWork.Application.DTOs;
 using CoWork.Application.Services;
 using Microsoft.AspNetCore.Mvc;
-
+using Microsoft.AspNetCore.Authorization;
 namespace CoWork.API.Controllers;
 
 [ApiController]
@@ -33,8 +33,10 @@ public class SpacesController : ControllerBase
     }
 
     [HttpPost]
+    [Authorize]
     [ProducesResponseType(typeof(SpaceResponse), StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     public async Task<IActionResult> Create([FromBody] CreateSpaceRequest request)
     {
         var space = await _spaceService.CreateAsync(request);
@@ -42,9 +44,11 @@ public class SpacesController : ControllerBase
     }
 
     [HttpPut("{id:int}")]
+    [Authorize]
     [ProducesResponseType(typeof(SpaceResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     public async Task<IActionResult> Update(int id, [FromBody] UpdateSpaceRequest request)
     {
         var space = await _spaceService.UpdateAsync(id, request);
@@ -52,8 +56,10 @@ public class SpacesController : ControllerBase
     }
 
     [HttpDelete("{id:int}")]
+    [Authorize]
     [ProducesResponseType(typeof(SpaceResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     public async Task<IActionResult> Deactivate(int id)
     {
         var space = await _spaceService.DeactivateAsync(id);
