@@ -53,6 +53,7 @@ CREATE TABLE Users (
     Id          INT             NOT NULL IDENTITY(1,1),
     Name        NVARCHAR(100)   NOT NULL,
     Email       NVARCHAR(150)   NOT NULL,
+    PasswordHash  NVARCHAR(255)   NOT NULL DEFAULT '',
     CreatedAt   DATETIME2       NOT NULL DEFAULT GETUTCDATE(),
     UpdatedAt   DATETIME2       NOT NULL DEFAULT GETUTCDATE(),
     CONSTRAINT PK_Users         PRIMARY KEY (Id),

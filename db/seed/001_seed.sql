@@ -24,23 +24,23 @@ GO
 -- =============================================
 -- Users
 -- =============================================
-INSERT INTO Users (Name, Email) VALUES
-('John Smith',      'john.smith@email.com'),
-('Maria Garcia',    'maria.garcia@email.com'),
-('Carlos Lopez',    'carlos.lopez@email.com'),
-('Ana Martinez',    'ana.martinez@email.com'),
-('Peter Johnson',   'peter.johnson@email.com');
+INSERT INTO Users (Name, Email, PasswordHash) VALUES
+('John Smith',      'john.smith@email.com' , '$2a$11$msOTeYBOpJ2EtaRQ76tQA.YsEdpGk8zlpe84Q/0QqdLIqdArVYMru'),
+('Maria Garcia',    'maria.garcia@email.com', '$2a$11$msOTeYBOpJ2EtaRQ76tQA.YsEdpGk8zlpe84Q/0QqdLIqdArVYMru'),
+('Carlos Lopez',    'carlos.lopez@email.com', '$2a$11$msOTeYBOpJ2EtaRQ76tQA.YsEdpGk8zlpe84Q/0QqdLIqdArVYMru'),
+('Ana Martinez',    'ana.martinez@email.com', '$2a$11$msOTeYBOpJ2EtaRQ76tQA.YsEdpGk8zlpe84Q/0QqdLIqdArVYMru'),
+('Peter Johnson',   'peter.johnson@email.com', '$2a$11$msOTeYBOpJ2EtaRQ76tQA.YsEdpGk8zlpe84Q/0QqdLIqdArVYMru');
 GO
 
 -- =============================================
 -- Spaces
 -- =============================================
 INSERT INTO Spaces (Name, Capacity, HourlyRate, OpeningTime, ClosingTime, Status) VALUES
-('Board Room A',        10,     80.00,  '08:00', '20:00', 'active'),
-('Meeting Room B',      6,      50.00,  '08:00', '18:00', 'active'),
-('Creative Studio',     8,      65.00,  '09:00', '21:00', 'active'),
-('Focus Room 1',        2,      30.00,  '07:00', '22:00', 'active'),
-('Conference Hall',     30,     150.00, '08:00', '20:00', 'maintenance');
+('Sala Reunión A',        10,     80.00,  '08:00', '20:00', 'active'),
+('Sala Reunión B',      6,      50.00,  '08:00', '18:00', 'active'),
+('Centro Creativo A',     8,      65.00,  '09:00', '21:00', 'active'),
+('Centro Creativo B',        2,      30.00,  '07:00', '22:00', 'active'),
+('Auditorio General',     30,     150.00, '08:00', '20:00', 'maintenance');
 GO
 
 -- =============================================
