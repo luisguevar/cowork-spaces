@@ -1,0 +1,24 @@
+# .NET
+**/bin/
+**/obj/
+**/*.user
+**/*.suo
+**/.vs/
+
+# Angular
+**/node_modules/
+**/dist/
+**/.angular/
+
+# Variables de entorno
+.env
+.env.local
+appsettings.Development.json
+
+# SQL Server
+*.mdf
+*.ldf
+
+# OS
+.DS_Store
+Thumbs.db

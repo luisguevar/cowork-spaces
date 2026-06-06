@@ -1,0 +1,58 @@
+name: Build and Test
+
+on:
+  push:
+    branches: [ develop, main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build-and-test:
+    name: Build and Test Backend
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup .NET 10
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '10.0.x'
+
+      - name: Restore dependencies
+        run: dotnet restore backend/CoWork.slnx
+
+      - name: Build
+        run: dotnet build backend/CoWork.slnx --no-restore --configuration Release
+
+      - name: Run unit tests
+        run: |
+          dotnet test backend/CoWork.Tests/CoWork.Tests.csproj \
+            --no-build \
+            --configuration Release \
+            --filter "FullyQualifiedName!~ConcurrencyTests" \
+            --verbosity normal
+
+  build-frontend:
+    name: Build Frontend
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+          cache-dependency-path: frontend/cowork-frontend/package-lock.json
+
+      - name: Install dependencies
+        run: npm install --legacy-peer-deps
+        working-directory: frontend/cowork-frontend
+
+      - name: Build Angular
+        run: npm run build
+        working-directory: frontend/cowork-frontend

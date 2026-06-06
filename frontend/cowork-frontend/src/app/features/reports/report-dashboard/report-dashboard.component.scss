@@ -1,0 +1,78 @@
+ .filter-card {
+     margin-bottom: 24px;
+ }
+
+ .filter-form {
+     display: flex;
+     gap: 16px;
+     align-items: center;
+     flex-wrap: wrap;
+ }
+
+ .error-message {
+     color: red;
+     padding: 16px;
+ }
+
+ .empty-message {
+     text-align: center;
+     color: #666;
+     padding: 60px;
+ }
+
+ .kpi-row {
+     display: flex;
+     gap: 16px;
+     margin-bottom: 24px;
+     flex-wrap: wrap;
+ }
+
+ .kpi-card {
+     flex: 1;
+     min-width: 180px;
+ }
+
+ .kpi-label {
+     font-size: 0.85em;
+     color: #666;
+     margin-bottom: 8px;
+ }
+
+ .kpi-value {
+     font-size: 1.8em;
+     font-weight: 500;
+     color: #1565c0;
+ }
+
+ .kpi-sub {
+     font-size: 0.8em;
+     color: #999;
+ }
+
+ .chart-card {
+     margin-bottom: 24px;
+ }
+
+ .occupancy-bar {
+     display: flex;
+     align-items: center;
+     gap: 8px;
+ }
+
+ .bar-fill {
+     height: 8px;
+     background: #1565c0;
+     border-radius: 4px;
+     min-width: 2px;
+     transition: width 0.3s;
+ }
+
+ mat-table {
+     width: 100%;
+ }
+
+ .report-content {
+     display: flex;
+     flex-direction: column;
+     gap: 24px;
+ }

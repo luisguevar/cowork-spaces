@@ -1,0 +1,391 @@
+ .header {
+     display: flex;
+     justify-content: space-between;
+     align-items: center;
+     margin-bottom: 16px;
+ }
+
+ .loading {
+     display: flex;
+     justify-content: center;
+     padding: 40px;
+ }
+
+ .error-message {
+     color: red;
+     padding: 16px;
+     display: flex;
+     align-items: center;
+     gap: 8px;
+ }
+
+ .success-message {
+     color: #2e7d32;
+     padding: 12px 16px;
+     background: #e8f5e9;
+     border-radius: 4px;
+     margin-bottom: 16px;
+     display: flex;
+     align-items: center;
+     gap: 8px;
+ }
+
+ .empty-message {
+     text-align: center;
+     color: #666;
+     padding: 40px;
+ }
+
+ .refund-info {
+     font-size: 0.85em;
+     color: #2e7d32;
+ }
+
+ mat-table {
+     width: 100%;
+ }
+
+ mat-paginator {
+     margin-top: 8px;
+ }
+
+ .chip-confirmed {
+     background-color: #e8f5e9 !important;
+     color: #2e7d32 !important;
+ }
+
+ .chip-pending {
+     background-color: #e3f2fd !important;
+     color: #1565c0 !important;
+ }
+
+ .chip-cancelled {
+     background-color: #ffebee !important;
+     color: #c62828 !important;
+ }
+
+ .chip-completed {
+     background-color: #f3e5f5 !important;
+     color: #6a1b9a !important;
+ }
+
+ .spaces-section {
+     margin-bottom: 24px;
+ }
+
+ .spaces-title {
+     font-size: 1.1rem;
+     font-weight: 500;
+     margin-bottom: 16px;
+     color: #333;
+ }
+
+ .spaces-grid {
+     display: grid;
+     grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+     gap: 16px;
+ }
+
+ .space-card {
+     cursor: pointer;
+     transition: box-shadow 0.2s, transform 0.2s;
+
+     &:hover {
+         box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+         transform: translateY(-2px);
+     }
+ }
+
+ .space-avatar {
+     background-color: #e3f2fd;
+     display: flex;
+     align-items: center;
+     justify-content: center;
+     border-radius: 50%;
+
+     mat-icon {
+         color: #1976d2;
+     }
+ }
+
+ .space-info {
+     margin-top: 8px;
+     display: flex;
+     flex-direction: column;
+     gap: 6px;
+ }
+
+ .space-info-row {
+     display: flex;
+     align-items: center;
+     gap: 6px;
+     font-size: 0.9rem;
+     color: #555;
+ }
+
+ .info-icon {
+     font-size: 18px;
+     width: 18px;
+     height: 18px;
+     color: #888;
+ }
+
+ .section-divider {
+     margin: 24px 0;
+ }
+
+ /* ── Layout general ── */
+ .bookings-container {
+     padding: 16px;
+     max-width: 1200px;
+     margin: 0 auto;
+ }
+
+ .page-header {
+     display: flex;
+     align-items: center;
+     justify-content: space-between;
+     flex-wrap: wrap;
+     gap: 8px;
+     margin-bottom: 16px;
+
+     h2 {
+         margin: 0;
+     }
+ }
+
+ /* ── Mensajes ── */
+ .loading {
+     display: flex;
+     justify-content: center;
+     padding: 24px;
+ }
+
+ .error-message {
+     color: #f44336;
+     padding: 8px 0;
+ }
+
+ .success-message {
+     display: flex;
+     align-items: center;
+     gap: 8px;
+     color: #4caf50;
+     padding: 8px 0;
+ }
+
+ .empty-message {
+     text-align: center;
+     color: #888;
+     padding: 24px 0;
+ }
+
+ .refund-info {
+     font-size: 12px;
+     color: #888;
+ }
+
+ /* ── Sección ── */
+ .spaces-section {
+     margin-bottom: 32px;
+ }
+
+ .spaces-title {
+     margin-bottom: 16px;
+ }
+
+ .section-divider {
+     margin: 24px 0;
+ }
+
+ /* ── Grid de ambientes ── */
+ .spaces-grid {
+     display: grid;
+     gap: 16px;
+     grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+ }
+
+ .space-card {
+     cursor: pointer;
+     transition: box-shadow 0.2s, transform 0.2s;
+
+     &:hover {
+         box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+         transform: translateY(-2px);
+     }
+ }
+
+ .space-avatar {
+     display: flex;
+     align-items: center;
+     justify-content: center;
+     background-color: #e3f2fd;
+     border-radius: 50%;
+     width: 40px;
+     height: 40px;
+ }
+
+ .space-info {
+     display: flex;
+     flex-direction: column;
+     gap: 6px;
+ }
+
+ .space-info-row {
+     display: flex;
+     align-items: center;
+     gap: 6px;
+     font-size: 14px;
+ }
+
+ .info-icon {
+     font-size: 16px;
+     width: 16px;
+     height: 16px;
+     color: #666;
+ }
+
+ /* ── Tabla: visible solo en tablet+ ── */
+ .table-wrapper {
+     overflow-x: auto;
+     display: block;
+ }
+
+ .bookings-table {
+     width: 100%;
+ }
+
+ /* ── Cards mobile: ocultas en tablet+ ── */
+ .mobile-bookings {
+     display: none;
+ }
+
+ /* ── Booking card (mobile) ── */
+ .booking-card {
+     margin-bottom: 12px;
+ }
+
+ .booking-card-header {
+     display: flex;
+     align-items: center;
+     justify-content: space-between;
+     margin-bottom: 12px;
+ }
+
+ .booking-number {
+     font-weight: 600;
+     color: #666;
+     font-size: 13px;
+ }
+
+ .booking-card-body {
+     display: flex;
+     flex-direction: column;
+     gap: 8px;
+     margin-bottom: 12px;
+ }
+
+ .booking-field {
+     display: flex;
+     align-items: center;
+     gap: 8px;
+     font-size: 14px;
+
+     mat-icon {
+         font-size: 18px;
+         width: 18px;
+         height: 18px;
+         color: #666;
+     }
+ }
+
+ .booking-card-actions {
+     display: flex;
+     justify-content: flex-end;
+ }
+
+ /* ── Breakpoints ── */
+
+ /* Tablet: grid de 2 cols */
+ @media (max-width: 959px) {
+     .spaces-grid {
+         grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+     }
+ }
+
+ /* Mobile: tabla → cards */
+ @media (max-width: 599px) {
+     .bookings-container {
+         padding: 12px;
+     }
+
+     .spaces-grid {
+         grid-template-columns: repeat(2, 1fr);
+     }
+
+     /* Ocultar tabla, mostrar cards */
+     .table-wrapper {
+         display: none;
+     }
+
+     .mobile-bookings {
+         display: block;
+     }
+
+     mat-paginator {
+         font-size: 12px;
+     }
+ }
+
+ /* Mobile muy pequeño */
+ @media (max-width: 359px) {
+     .spaces-grid {
+         grid-template-columns: 1fr;
+     }
+ }
+
+ .bookings-table {
+     width: 100%;
+
+     // Columnas angostas — contenido fijo corto
+     .mat-column-id {
+         flex: 0 0 40px;
+     }
+
+     .mat-column-startTime,
+     .mat-column-endTime {
+         flex: 0 0 60px;
+     }
+
+     .mat-column-date {
+         flex: 0 0 100px;
+     }
+
+     .mat-column-finalPrice {
+         flex: 0 0 120px;
+     }
+
+     .mat-column-status {
+         flex: 0 0 150px;
+     }
+
+     // Columnas medianas
+     .mat-column-createdAt {
+         flex: 0 0 140px;
+     }
+
+     // Columnas flexibles — toman el espacio restante
+     .mat-column-space {
+         flex: 2 1 0;
+     }
+
+     .mat-column-user {
+         flex: 2 1 0;
+     }
+
+     // Acciones — ancho fijo cómodo para el botón
+     .mat-column-actions {
+         flex: 0 0 110px;
+         justify-content: flex-end;
+     }
+ }

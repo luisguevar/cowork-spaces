@@ -1,0 +1,30 @@
+  .form-container {
+      max-width: 600px;
+      margin: 0 auto;
+  }
+
+  .full-width {
+      width: 100%;
+      margin-bottom: 8px;
+  }
+
+  .half-width {
+      width: 48%;
+  }
+
+  .time-row {
+      display: flex;
+      gap: 16px;
+  }
+
+  .actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 8px;
+      margin-top: 16px;
+  }
+
+  .error-message {
+      color: red;
+      margin-bottom: 16px;
+  }

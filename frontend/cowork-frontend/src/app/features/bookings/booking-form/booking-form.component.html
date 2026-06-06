@@ -1,0 +1,123 @@
+<div class="form-container">
+    <h2>Nueva Reserva</h2>
+
+    <div class="layout">
+
+        <!-- Formulario -->
+        <form [formGroup]="form" (ngSubmit)="onSubmit()" class="form-section">
+
+            <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Ambiente</mat-label>
+                <mat-select formControlName="spaceId">
+                    <mat-option *ngFor="let s of spaces" [value]="s.id">
+                        {{ s.name }} — {{ s.hourlyRate | currency:'PEN ':'symbol' }} / hr
+                    </mat-option>
+                </mat-select>
+                <mat-error *ngIf="form.get('spaceId')?.hasError('required')">
+                    El ambiente es requerido
+                </mat-error>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Usuario</mat-label>
+                <mat-select formControlName="userId">
+                    <mat-option *ngFor="let u of users" [value]="u.id">
+                        {{ u.name }}
+                    </mat-option>
+                </mat-select>
+                <mat-error *ngIf="form.get('userId')?.hasError('required')">
+                    El usuario es requerido
+                </mat-error>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Fecha de reserva</mat-label>
+                <input matInput [matDatepicker]="picker" formControlName="bookingDate" placeholder="dd/mm/aaaa">
+                <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+                <mat-datepicker #picker></mat-datepicker>
+                <mat-error *ngIf="form.get('bookingDate')?.hasError('required')">
+                    La fecha es requerida
+                </mat-error>
+            </mat-form-field>
+
+            <mat-slide-toggle formControlName="exactTimes" class="time-mode-toggle">
+                Usar horas exactas
+            </mat-slide-toggle>
+
+            <div class="time-grid">
+                <mat-form-field appearance="outline" class="full-width">
+                    <mat-label>Hora de inicio</mat-label>
+                    <mat-select *ngIf="!form.get('exactTimes')?.value" formControlName="startSlot">
+                        <mat-option *ngFor="let time of availableStartOptions" [value]="time">
+                            {{ time }}
+                        </mat-option>
+                    </mat-select>
+                    <input *ngIf="form.get('exactTimes')?.value" matInput type="time" formControlName="startSlot"
+                        step="60">
+                    <mat-error *ngIf="form.get('startSlot')?.hasError('required')">
+                        La hora de inicio es requerida
+                    </mat-error>
+                    <mat-hint *ngIf="!form.get('exactTimes')?.value && !availableStartOptions.length">
+                        No hay horarios disponibles para la selección actual.
+                    </mat-hint>
+                </mat-form-field>
+
+                <mat-form-field appearance="outline" class="full-width">
+                    <mat-label>Hora de fin</mat-label>
+                    <mat-select *ngIf="!form.get('exactTimes')?.value" formControlName="endSlot"
+                        [disabled]="!availableEndOptions.length">
+                        <mat-option *ngFor="let time of availableEndOptions" [value]="time">
+                            {{ time }}
+                        </mat-option>
+                    </mat-select>
+                    <input *ngIf="form.get('exactTimes')?.value" matInput type="time" formControlName="endSlot"
+                        step="60" [disabled]="!form.get('startSlot')?.value">
+                    <mat-error *ngIf="form.get('endSlot')?.hasError('required')">
+                        La hora de fin es requerida
+                    </mat-error>
+                    <mat-error *ngIf="form.hasError('invalidTimeRange') && form.get('endSlot')?.touched">
+                        La hora de fin debe ser posterior al inicio
+                    </mat-error>
+                    <mat-error *ngIf="form.hasError('minDuration')">
+                        La reserva debe durar al menos 30 minutos.
+                    </mat-error>
+                    <mat-error *ngIf="form.hasError('maxDuration')">
+                        La reserva no puede superar 8 horas.
+                    </mat-error>
+                    <mat-error *ngIf="form.hasError('outsideOpeningHours')">
+                        La reserva debe estar dentro del horario del espacio.
+                    </mat-error>
+                </mat-form-field>
+            </div>
+
+            <div *ngIf="previewLoading" class="inline-preview-loading" role="status" aria-live="polite">
+                <mat-spinner diameter="22"></mat-spinner>
+                <span>Calculando tarifa...</span>
+            </div>
+
+            <div *ngIf="error" class="error-message">
+                <mat-icon>error</mat-icon> {{ error }}
+            </div>
+
+            <div *ngIf="conflictError" class="conflict-message">
+                <mat-icon>event_busy</mat-icon>
+                El espacio se encuentra reservado para el horario seleccionado.
+            </div>
+
+            <div class="actions">
+                <button mat-button type="button" (click)="cancel()">Volver</button>
+                <button mat-raised-button color="primary" type="submit"
+                    [disabled]="form.invalid || loading || !preview">
+                    <mat-spinner *ngIf="loading" diameter="20" />
+                    <span *ngIf="!loading">Confirmar Reserva</span>
+                </button>
+            </div>
+
+        </form>
+
+        <!-- Preview de precio -->
+        <app-price-preview [preview]="preview" [loading]="previewLoading">
+        </app-price-preview>
+
+    </div>
+</div>

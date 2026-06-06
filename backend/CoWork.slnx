@@ -1,0 +1,7 @@
+<Solution>
+  <Project Path="CoWork.API/CoWork.API.csproj" />
+  <Project Path="CoWork.Application/CoWork.Application.csproj" />
+  <Project Path="CoWork.Domain/CoWork.Domain.csproj" />
+  <Project Path="CoWork.Infrastructure/CoWork.Infrastructure.csproj" />
+  <Project Path="CoWork.Tests/CoWork.Tests.csproj" />
+</Solution>

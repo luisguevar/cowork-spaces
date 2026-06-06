@@ -1,0 +1,42 @@
+  .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+  }
+
+  .loading {
+      display: flex;
+      justify-content: center;
+      padding: 40px;
+  }
+
+  .error-message {
+      color: red;
+      padding: 16px;
+  }
+
+  .chip-active {
+      background-color: #e8f5e9 !important;
+      color: #2e7d32 !important;
+  }
+
+  .chip-maintenance {
+      background-color: #fff3e0 !important;
+      color: #e65100 !important;
+  }
+
+  .table-scroll {
+      width: 100%;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+  }
+
+  .spaces-table {
+      width: 100%;
+      min-width: 760px;
+  }
+
+  mat-paginator {
+      margin-top: 8px;
+  }

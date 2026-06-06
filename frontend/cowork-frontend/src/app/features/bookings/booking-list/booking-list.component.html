@@ -1,0 +1,183 @@
+<!-- bookings.component.html -->
+<div class="bookings-container">
+
+    <div class="page-header">
+        <h2>Reservas</h2>
+    </div>
+
+    <div *ngIf="loading" class="loading">
+        <mat-spinner diameter="40" />
+    </div>
+
+    <div *ngIf="error" class="error-message">{{ error }}</div>
+
+    <div *ngIf="successMessage" class="success-message">
+        <mat-icon>check_circle</mat-icon> {{ successMessage }}
+    </div>
+
+    <!-- SECCIÓN: Ambientes disponibles -->
+    <div class="spaces-section">
+        <h3 class="spaces-title">Ambientes Disponibles</h3>
+
+        <div *ngIf="loadingSpaces" class="loading">
+            <mat-spinner diameter="40" />
+        </div>
+
+        <div class="spaces-grid" *ngIf="!loadingSpaces">
+            <mat-card class="space-card" *ngFor="let space of spaces" (click)="bookSpace(space)">
+                <mat-card-header>
+                    <div mat-card-avatar class="space-avatar">
+                        <mat-icon>meeting_room</mat-icon>
+                    </div>
+                    <mat-card-title>{{ space.name }}</mat-card-title>
+                </mat-card-header>
+                <mat-card-content>
+                    <div class="space-info">
+                        <div class="space-info-row">
+                            <mat-icon class="info-icon">group</mat-icon>
+                            <span>{{ space.capacity }} personas</span>
+                        </div>
+                        <div class="space-info-row">
+                           <!--  <mat-icon class="info-icon">attach_money</mat-icon> -->
+                            <span>{{ space.hourlyRate | currency:'PEN ':'symbol' }} / hora</span>
+                        </div>
+                    </div>
+                </mat-card-content>
+            </mat-card>
+        </div>
+
+        <p *ngIf="!loadingSpaces && spaces.length === 0" class="empty-message">
+            No hay ambientes disponibles.
+        </p>
+    </div>
+
+    <mat-divider class="section-divider" />
+
+    <!-- SECCIÓN: Historial -->
+    <div class="spaces-section">
+        <h3 class="spaces-title">Historial de Reservas</h3>
+
+        <!-- Tabla: solo en tablet/desktop -->
+        <div class="table-wrapper" *ngIf="!loading">
+            <mat-table [dataSource]="dataSource" class="mat-elevation-z2 bookings-table">
+
+                <ng-container matColumnDef="id">
+                    <mat-header-cell *matHeaderCellDef>#</mat-header-cell>
+                    <mat-cell *matCellDef="let b; let i = index">{{ i + 1 }}</mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="createdAt">
+                    <mat-header-cell *matHeaderCellDef>Registro</mat-header-cell>
+                    <mat-cell *matCellDef="let b">{{ b.createdAt | date:'dd/MM/yyyy HH:mm' }}</mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="space">
+                    <mat-header-cell *matHeaderCellDef>Ambiente</mat-header-cell>
+                    <mat-cell *matCellDef="let b">{{ b.spaceName }}</mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="user">
+                    <mat-header-cell *matHeaderCellDef>Usuario</mat-header-cell>
+                    <mat-cell *matCellDef="let b">{{ b.userName }}</mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="date">
+                    <mat-header-cell *matHeaderCellDef>Fecha</mat-header-cell>
+                    <mat-cell *matCellDef="let b">{{ b.startTime | date:'dd/MM/yyyy' }}</mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="startTime">
+                    <mat-header-cell *matHeaderCellDef>Inicio</mat-header-cell>
+                    <mat-cell *matCellDef="let b"><b>{{ b.startTime | date:'HH:mm' }}</b></mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="endTime">
+                    <mat-header-cell *matHeaderCellDef>Fin</mat-header-cell>
+                    <mat-cell *matCellDef="let b"><b>{{ b.endTime | date:'HH:mm' }}</b></mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="finalPrice">
+                    <mat-header-cell *matHeaderCellDef>Precio</mat-header-cell>
+                    <mat-cell *matCellDef="let b">{{ b.finalPrice | currency:'PEN ':'symbol' }}</mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="status">
+                    <mat-header-cell *matHeaderCellDef>Estado</mat-header-cell>
+                    <mat-cell *matCellDef="let b">
+                        <mat-chip [class]="getStatusClass(b.status)">{{ getStatusName(b.status) }}</mat-chip>
+                    </mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="actions">
+                    <mat-header-cell *matHeaderCellDef>Acciones</mat-header-cell>
+                    <mat-cell *matCellDef="let b">
+                        <button mat-button color="warn" *ngIf="b.status === 'Confirmed' || b.status === 'Pending'"
+                            (click)="cancelBooking(b)">
+                            Cancelar
+                        </button>
+                        <span *ngIf="b.status === 'Cancelled'" class="refund-info">
+                            Reembolso: {{ b.refundAmount | currency:'PEN ':'symbol' }}
+                        </span>
+                    </mat-cell>
+                </ng-container>
+
+                <mat-header-row *matHeaderRowDef="columns" />
+                <mat-row *matRowDef="let row; columns: columns;" />
+            </mat-table>
+        </div>
+
+        <!-- Cards: solo en mobile -->
+        <div class="mobile-bookings" *ngIf="!loading">
+            <mat-card class="booking-card" *ngFor="let b of pagedBookingsForMobile; let i = index">
+                <mat-card-content>
+                    <div class="booking-card-header">
+                        <span class="booking-number">#{{ (pageIndex * pageSize) + i + 1 }}</span>
+                        <mat-chip [class]="getStatusClass(b.status)">{{ getStatusName(b.status) }}</mat-chip>
+                    </div>
+                    <div class="booking-card-body">
+                        <div class="booking-field">
+                            <mat-icon>meeting_room</mat-icon>
+                            <span>{{ b.spaceName }}</span>
+                        </div>
+                        <div class="booking-field">
+                            <mat-icon>person</mat-icon>
+                            <span>{{ b.userName }}</span>
+                        </div>
+                        <div class="booking-field">
+                            <mat-icon>calendar_today</mat-icon>
+                            <span>{{ b.startTime | date:'dd/MM/yyyy' }}</span>
+                        </div>
+                        <div class="booking-field">
+                            <mat-icon>schedule</mat-icon>
+                            <span>{{ b.startTime | date:'HH:mm' }} – {{ b.endTime | date:'HH:mm' }}</span>
+                        </div>
+                        <div class="booking-field">
+                            <mat-icon>attach_money</mat-icon>
+                            <span>{{ b.finalPrice | currency:'PEN ':'symbol' }}</span>
+                        </div>
+                    </div>
+                    <div class="booking-card-actions">
+                        <button mat-stroked-button color="warn"
+                            *ngIf="b.status === 'Confirmed' || b.status === 'Pending'" (click)="cancelBooking(b)">
+                            Cancelar reserva
+                        </button>
+                        <span *ngIf="b.status === 'Cancelled'" class="refund-info">
+                            Reembolso: {{ b.refundAmount | currency:'PEN ':'symbol' }}
+                        </span>
+                    </div>
+                </mat-card-content>
+            </mat-card>
+        </div>
+
+        <mat-paginator *ngIf="!loading && dataSource.data.length" [pageSize]="pageSize" [pageIndex]="pageIndex"
+            [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons (page)="onPageChange($event)"
+            aria-label="Paginacion del historial de reservas">
+        </mat-paginator>
+
+
+
+        <p *ngIf="!loading && dataSource.data.length === 0" class="empty-message">
+            No se encontraron reservas.
+        </p>
+    </div>
+</div>

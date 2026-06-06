@@ -1,0 +1,120 @@
+<h2>Reportes</h2>
+
+<!-- Filtro de fechas -->
+<mat-card class="filter-card">
+    <mat-card-content>
+        <form [formGroup]="form" (ngSubmit)="loadReport()" class="filter-form">
+            <mat-form-field appearance="outline">
+                <mat-label>Desde</mat-label>
+                <input matInput [matDatepicker]="fromPicker" formControlName="fromDate">
+                <mat-datepicker-toggle matSuffix [for]="fromPicker"></mat-datepicker-toggle>
+                <mat-datepicker #fromPicker></mat-datepicker>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+                <mat-label>Hasta</mat-label>
+                <input matInput [matDatepicker]="toPicker" formControlName="toDate">
+                <mat-datepicker-toggle matSuffix [for]="toPicker"></mat-datepicker-toggle>
+                <mat-datepicker #toPicker></mat-datepicker>
+            </mat-form-field>
+
+            <button mat-raised-button color="primary" type="submit" [disabled]="form.invalid || loading">
+                <mat-spinner *ngIf="loading" diameter="20" />
+                <span *ngIf="!loading">Generar Reporte</span>
+            </button>
+        </form>
+    </mat-card-content>
+</mat-card>
+
+<div *ngIf="error" class="error-message">{{ error }}</div>
+
+<div *ngIf="report" class="report-content">
+
+    <!-- KPIs -->
+    <div class="kpi-row">
+        <mat-card class="kpi-card">
+            <mat-card-content>
+                <div class="kpi-label">Ingresos Totales</div>
+                <div class="kpi-value">{{ report.totalRevenue | currency:'PEN ':'symbol' }}</div>
+            </mat-card-content>
+        </mat-card>
+
+        <mat-card class="kpi-card">
+            <mat-card-content>
+                <div class="kpi-label">Hora Pico</div>
+                <div class="kpi-value">
+                    {{ report.peakHour ? (report.peakHour.hour + ':00') : 'N/A' }}
+                </div>
+                <div class="kpi-sub" *ngIf="report.peakHour">
+                    {{ report.peakHour.bookingCount }} reservas
+                </div>
+            </mat-card-content>
+        </mat-card>
+
+        <mat-card class="kpi-card">
+            <mat-card-content>
+                <div class="kpi-label">Total Ambientes</div>
+                <div class="kpi-value">{{ report.spaceOccupancies.length }}</div>
+            </mat-card-content>
+        </mat-card>
+    </div>
+
+    <!-- Grafico de ingresos -->
+    <mat-card class="chart-card">
+        <mat-card-header>
+            <mat-card-title>Ingresos por Ambiente</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+            <canvas #revenueChart></canvas>
+        </mat-card-content>
+    </mat-card>
+
+    <!-- Tabla de ocupacion -->
+    <mat-card>
+        <mat-card-header>
+            <mat-card-title>Ocupación por Ambiente</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+            <mat-table [dataSource]="report.spaceOccupancies" class="mat-elevation-z0">
+
+                <ng-container matColumnDef="spaceName">
+                    <mat-header-cell *matHeaderCellDef>Ambiente</mat-header-cell>
+                    <mat-cell *matCellDef="let s">{{ s.spaceName }}</mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="totalBookings">
+                    <mat-header-cell *matHeaderCellDef>Reservas</mat-header-cell>
+                    <mat-cell *matCellDef="let s">{{ s.totalBookings }}</mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="bookedHours">
+                    <mat-header-cell *matHeaderCellDef>Horas Reservadas</mat-header-cell>
+                    <mat-cell *matCellDef="let s">{{ s.bookedHours | number:'1.1-1' }}h</mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="occupancyRate">
+                    <mat-header-cell *matHeaderCellDef>Ocupación</mat-header-cell>
+                    <mat-cell *matCellDef="let s">
+                        <div class="occupancy-bar">
+                            <div class="bar-fill" [style.width.%]="s.occupancyRate"></div>
+                            <span>{{ s.occupancyRate | number:'1.1-1' }}%</span>
+                        </div>
+                    </mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="totalRevenue">
+                    <mat-header-cell *matHeaderCellDef>Ingresos</mat-header-cell>
+                    <mat-cell *matCellDef="let s">{{ s.totalRevenue | currency:'PEN ':'symbol' }}</mat-cell>
+                </ng-container>
+
+                <mat-header-row *matHeaderRowDef="columns" />
+                <mat-row *matRowDef="let row; columns: columns;" />
+            </mat-table>
+        </mat-card-content>
+    </mat-card>
+
+</div>
+
+<div *ngIf="!report && !loading" class="empty-message">
+    Seleccione un rango de fechas y haga clic en Generar Informe.
+</div>
