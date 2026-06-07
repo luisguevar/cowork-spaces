@@ -37,6 +37,63 @@
       min-width: 760px;
   }
 
+  .action-icon {
+      color: inherit;
+  }
+
+  .action-icon--primary {
+      color: var(--mat-sys-primary) !important;
+  }
+
+  .action-icon--danger {
+      color: var(--mat-sys-error) !important;
+  }
+
+  .action-icon--success {
+      color: #2e7d32 !important;
+  }
+
+  .action-icon .mat-icon {
+      color: inherit;
+  }
+
   mat-paginator {
       margin-top: 8px;
+  }
+
+  .legend {
+      display: flex;
+      gap: 16px;
+      margin-bottom: 16px;
+      flex-wrap: wrap;
+  }
+
+  .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.85em;
+  }
+
+  .dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      display: inline-block;
+  }
+
+  .dot.confirmed {
+      background: #2e7d32;
+  }
+
+  .dot.warning {
+      background: #ff9800;
+  }
+
+  .dot.cancelled {
+      background: #c62828;
+  }
+
+  .dot.completed {
+      background: #6a1b9a;
   }

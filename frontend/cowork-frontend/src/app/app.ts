@@ -24,9 +24,11 @@ import { AuthService } from './core/services/auth.service';
       <span class="spacer"></span>
 
      <ng-container>
-      <a mat-button routerLink="/spaces"   routerLinkActive="active-link">Spaces</a>
-      <a mat-button routerLink="/bookings" routerLinkActive="active-link">Bookings</a>
-      <a mat-button routerLink="/reports"  routerLinkActive="active-link">Reports</a>
+      <a mat-button routerLink="/spaces"   routerLinkActive="active-link">Ambientes</a>
+      <a mat-button routerLink="/bookings" routerLinkActive="active-link">Reservas</a>
+   
+       <a mat-button routerLink="/calendar" routerLinkActive="active-link">Calendario</a>
+          <a mat-button routerLink="/reports"  routerLinkActive="active-link">Reportes</a>
 
     <ng-container *ngIf="authService.isLoggedIn(); else loginBtn">
       <span class="user-name">
@@ -34,7 +36,7 @@ import { AuthService } from './core/services/auth.service';
         {{ authService.currentUser()?.name }}
       </span>
       <button mat-button (click)="authService.logout()">
-        <mat-icon>logout</mat-icon> Logout
+        <mat-icon>logout</mat-icon> Cerrar sesión
       </button>
     </ng-container>
 

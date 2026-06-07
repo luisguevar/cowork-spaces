@@ -66,7 +66,7 @@ public class BookingService : IBookingService
             ?? throw new NotFoundException("Space", request.SpaceId);
 
         if (!space.IsActive)
-            throw new DomainException("Space is not available for bookings.");
+            throw new DomainException("Ambiente no disponible para reservas.");
 
         // Validar horario dentro de apertura y cierre
         var startTimeOnly = TimeOnly.FromDateTime(request.StartTime);
@@ -74,7 +74,7 @@ public class BookingService : IBookingService
 
         if (startTimeOnly < space.OpeningTime || endTimeOnly > space.ClosingTime)
             throw new DomainException(
-                $"Booking must be within space opening hours " +
+                $"La reserva debe estar dentro del horario de apertura del ambiente " +
                 $"({space.OpeningTime} - {space.ClosingTime}).");
 
         // Calcular precio
@@ -120,6 +120,18 @@ public class BookingService : IBookingService
             RefundAmount = refund.RefundAmount,
             RefundDescription = refund.Description
         };
+    }
+
+    public async Task<BookingResponse> UpdateStatusAsync(int id, UpdateBookingStatusRequest request)
+    {
+        var booking = await _bookingRepository.GetByIdAsync(id)
+            ?? throw new NotFoundException("Booking", id);
+
+        if (booking.Status == "Cancelled")
+            throw new DomainException("Una reserva cancelada no se puede actualizar.");
+
+        var updated = await _bookingRepository.UpdateStatusAsync(id, request.Status);
+        return MapToResponse(updated);
     }
 
     private static BookingResponse MapToResponse(Booking booking) => new()

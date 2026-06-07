@@ -82,4 +82,12 @@ export class SpaceListComponent implements OnInit {
       default: return status;
     }
   }
+
+  getStatusClass(status: string): string {
+    const map: Record<string, string> = {
+      active: 'dot confirmed',
+      maintenance: 'dot warning'
+    };
+    return map[status] ?? '';
+  }
 }

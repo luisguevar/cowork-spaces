@@ -185,6 +185,26 @@
      color: #888;
  }
 
+.booking-action-icon {
+    margin-right: 4px;
+}
+
+.booking-action-icon--cancel {
+    color: var(--mat-sys-error) !important;
+}
+
+.booking-action-icon--confirm {
+    color: #2e7d32 !important;
+}
+
+.booking-action-icon--complete {
+    color: #1565c0 !important;
+}
+
+.booking-action-icon--manage {
+    color: #1976d2 !important;
+}
+
  /* ── Sección ── */
  .spaces-section {
      margin-bottom: 32px;
@@ -302,6 +322,14 @@
  .booking-card-actions {
      display: flex;
      justify-content: flex-end;
+     align-items: center;
+     gap: 4px;
+     flex-wrap: wrap;
+ }
+
+ .booking-card-actions .refund-info {
+     flex: 1 0 100%;
+     text-align: right;
  }
 
  /* ── Breakpoints ── */
@@ -330,6 +358,19 @@
 
      .mobile-bookings {
          display: block;
+     }
+
+     .booking-card-header {
+         align-items: flex-start;
+         gap: 8px;
+     }
+
+     .booking-card-actions {
+         justify-content: flex-start;
+     }
+
+     .booking-card-actions .refund-info {
+         text-align: left;
      }
 
      mat-paginator {
@@ -388,4 +429,41 @@
          flex: 0 0 110px;
          justify-content: flex-end;
      }
+ }
+
+ .legend {
+     display: flex;
+     gap: 16px;
+     margin-bottom: 16px;
+     flex-wrap: wrap;
+ }
+
+ .legend-item {
+     display: flex;
+     align-items: center;
+     gap: 6px;
+     font-size: 0.85em;
+ }
+
+ .dot {
+     width: 12px;
+     height: 12px;
+     border-radius: 50%;
+     display: inline-block;
+ }
+
+ .dot.confirmed {
+     background: #2e7d32;
+ }
+
+ .dot.pending {
+     background: #1565c0;
+ }
+
+ .dot.cancelled {
+     background: #c62828;
+ }
+
+ .dot.completed {
+     background: #6a1b9a;
  }

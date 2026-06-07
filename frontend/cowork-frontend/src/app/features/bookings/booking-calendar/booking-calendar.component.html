@@ -1,0 +1,62 @@
+<div class="calendar-container">
+    <div class="header">
+        <h2>Calendario de Reservas</h2>
+        <a mat-raised-button color="primary" routerLink="/bookings/new">
+            <mat-icon>add</mat-icon> Nueva Reserva
+        </a>
+
+    </div>
+
+    <!-- Leyenda -->
+    <div class="legend">
+        <span class="legend-item">
+            <span class="dot confirmed"></span> Confirmada
+        </span>
+        <span class="legend-item">
+            <span class="dot pending"></span> Pendiente
+        </span>
+        <span class="legend-item">
+            <span class="dot cancelled"></span> Cancelada
+        </span>
+        <span class="legend-item">
+            <span class="dot completed"></span> Completada
+        </span>
+    </div>
+
+    <div *ngIf="loading" class="loading">
+        <mat-spinner diameter="40" />
+    </div>
+
+    <div *ngIf="error" class="error-message">{{ error }}</div>
+
+    <!-- Tooltip de reserva seleccionada -->
+    <mat-card *ngIf="selectedBooking" class="booking-detail">
+        <mat-card-content>
+            <div class="detail-row">
+                <strong>Ambiente:</strong> {{ selectedBooking.spaceName }}
+            </div>
+            <div class="detail-row">
+                <strong>Usuario:</strong> {{ selectedBooking.userName }}
+            </div>
+            <div class="detail-row">
+                <strong>Inicio:</strong> {{ selectedBooking.startTime | date:'short' }}
+            </div>
+            <div class="detail-row">
+                <strong>Fin:</strong> {{ selectedBooking.endTime | date:'short' }}
+            </div>
+            <div class="detail-row">
+                <strong>Precio:</strong> {{ selectedBooking.finalPrice | currency }}
+            </div>
+            <div class="detail-row">
+                <strong>Estado:</strong>
+                <span [class]="'status-' + selectedBooking.status.toLowerCase()">
+                    {{ selectedBooking.status }}
+                </span>
+            </div>
+            <button mat-button (click)="selectedBooking = null">Cerrar</button>
+        </mat-card-content>
+    </mat-card>
+
+    <full-calendar *ngIf="!loading" [options]="calendarOptions">
+    </full-calendar>
+</div>

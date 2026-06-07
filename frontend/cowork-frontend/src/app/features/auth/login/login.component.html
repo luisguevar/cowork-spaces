@@ -11,25 +11,25 @@
 
 
                 <mat-form-field appearance="outline" class="full-width">
-                    <mat-label>Email</mat-label>
+                    <mat-label>Correo</mat-label>
                     <input matInput type="email" formControlName="email" placeholder="john.smith@email.com">
                     <mat-icon matSuffix>email</mat-icon>
                     <mat-error *ngIf="form.get('email')?.hasError('required')">
-                        Email is required
+                        El correo es obligatorio
                     </mat-error>
                     <mat-error *ngIf="form.get('email')?.hasError('email')">
-                        Enter a valid email
+                        Ingresa un correo válido
                     </mat-error>
                 </mat-form-field>
 
                 <mat-form-field appearance="outline" class="full-width">
-                    <mat-label>Password</mat-label>
+                    <mat-label>Contraseña</mat-label>
                     <input matInput [type]="hidePassword ? 'password' : 'text'" formControlName="password">
                     <button mat-icon-button matSuffix type="button" (click)="hidePassword = !hidePassword">
                         <mat-icon>{{ hidePassword ? 'visibility_off' : 'visibility' }}</mat-icon>
                     </button>
                     <mat-error *ngIf="form.get('password')?.hasError('required')">
-                        Password is required
+                        La contraseña es obligatoria
                     </mat-error>
                 </mat-form-field>
 
@@ -40,17 +40,17 @@
                 <button mat-raised-button color="primary" type="submit" class="full-width login-btn"
                     [disabled]="form.invalid || loading">
                     <mat-spinner *ngIf="loading" diameter="20" />
-                    <span *ngIf="!loading">Sign In</span>
+                    <span *ngIf="!loading">Iniciar Sesión</span>
                 </button>
 
             </form>
         </mat-card-content>
 
         <mat-card-footer class="hint">
-            Default admin: <span>john.smith@email.com</span>
+            Administrador por defecto: <span>john.smith@email.com</span>
 
             <br>
-            Default password: 12345678
+            Contraseña por defecto: 12345678
         </mat-card-footer>
 
     </mat-card>

@@ -9,4 +9,5 @@ public interface IBookingService
     Task<BookingResponse> CreateAsync(CreateBookingRequest request);
     Task<PricePreviewResponse> GetPricePreviewAsync(PricePreviewRequest request);
     Task<CancelBookingResponse> CancelAsync(int id);
+    Task<BookingResponse> UpdateStatusAsync(int id, UpdateBookingStatusRequest request);
 }

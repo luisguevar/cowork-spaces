@@ -27,6 +27,13 @@ export const routes: Routes = [
         .then(m => m.SpaceFormComponent)
   },
   {
+    path: 'spaces/:id/edit',
+    canActivate: [authGuard],
+    loadComponent: () =>
+      import('./features/spaces/space-form/space-form.component')
+        .then(m => m.SpaceFormComponent)
+  },
+  {
     path: 'bookings',
     loadComponent: () =>
       import('./features/bookings/booking-list/booking-list.component')
@@ -38,6 +45,18 @@ export const routes: Routes = [
     loadComponent: () =>
       import('./features/bookings/booking-form/booking-form.component')
         .then(m => m.BookingFormComponent)
+  },
+  {
+    path: 'calendar',
+    loadComponent: () =>
+      import('./features/bookings/booking-calendar/booking-calendar.component')
+        .then(m => m.BookingCalendarComponent)
+  },
+  {
+    path: 'spaces/:id/availability',
+    loadComponent: () =>
+      import('./features/spaces/space-availability/space-availability.component')
+        .then(m => m.SpaceAvailabilityComponent)
   },
   {
     path: 'reports',

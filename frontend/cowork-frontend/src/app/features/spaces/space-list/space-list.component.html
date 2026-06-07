@@ -37,19 +37,36 @@
         <ng-container matColumnDef="status">
             <mat-header-cell *matHeaderCellDef>Estado</mat-header-cell>
             <mat-cell *matCellDef="let s">
-                <mat-chip [class]="s.status === 'active' ? 'chip-active' : 'chip-maintenance'">
+                <!--   <mat-chip [class]="s.status === 'active' ? 'chip-active' : 'chip-maintenance'">
                     {{getStatusName(s.status)}}
                 </mat-chip>
+ -->
+                <div class="legend">
+
+                    <span class="legend-item">
+                        <span [class]="getStatusClass(s.status)"></span> {{getStatusName(s.status)}}
+                    </span>
+                </div>
             </mat-cell>
         </ng-container>
 
         <ng-container matColumnDef="actions">
             <mat-header-cell *matHeaderCellDef>Acciones</mat-header-cell>
             <mat-cell *matCellDef="let s">
-
-                <button [disabled]="!authService.isLoggedIn()" mat-button color="warn" *ngIf="s.status === 'active'" (click)="deactivate(s.id)">
-                    Desactivar
+                <a [routerLink]="['/spaces', s.id, 'edit']" [class.disabled-link]="!authService.isLoggedIn()"
+                    class="action-icon action-icon--primary" mat-icon-button aria-label="Editar ambiente"
+                    title="Editar ambiente">
+                    <mat-icon>edit</mat-icon>
+                </a>
+                <button [disabled]="!authService.isLoggedIn()" class="action-icon action-icon--danger" mat-icon-button
+                    color="warn" aria-label="Desactivar ambiente" title="Desactivar ambiente"
+                    *ngIf="s.status === 'active'" (click)="deactivate(s.id)">
+                    <mat-icon>block</mat-icon>
                 </button>
+                <a [routerLink]="['/spaces', s.id, 'availability']" class="action-icon action-icon--success"
+                    mat-icon-button aria-label="Ver disponibilidad" title="Ver disponibilidad">
+                    <mat-icon>schedule</mat-icon>
+                </a>
             </mat-cell>
         </ng-container>
 

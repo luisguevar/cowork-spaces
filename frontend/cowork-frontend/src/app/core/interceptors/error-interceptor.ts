@@ -15,12 +15,22 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) => {
         router.navigate(['/login']);
       }
 
-      let message = 'An unexpected error occurred. Please try again.';
-      if (error.error?.detail) message = error.error.detail;
+      let message = 'Se ha producido un error inesperado. Inténtalo de nuevo.';
+
+      if (error.error?.errors) {
+        const validationErrors = Object.values(error.error.errors)
+          .flat() as string[];
+
+        if (validationErrors.length > 0) {
+          message = validationErrors[0];
+        }
+      } else if (error.error?.detail) {
+        message = error.error.detail;
+      }
 
       return throwError(() => ({
         status: error.status,
-        message: message
+        message
       }));
     })
   );

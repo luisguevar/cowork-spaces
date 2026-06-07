@@ -61,9 +61,21 @@ public class BookingsController : ControllerBase
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-    public async Task<IActionResult> Cancel(int id)
+    public async Task<IActionResult> ChangeEstado(int id)
     {
         var result = await _bookingService.CancelAsync(id);
+        return Ok(result);
+    }
+
+    [HttpPatch("{id:int}/status")]
+    [Authorize]
+    [ProducesResponseType(typeof(BookingResponse), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    public async Task<IActionResult> UpdateStatus(int id, [FromBody] UpdateBookingStatusRequest request)
+    {
+        var result = await _bookingService.UpdateStatusAsync(id, request);
         return Ok(result);
     }
 }
