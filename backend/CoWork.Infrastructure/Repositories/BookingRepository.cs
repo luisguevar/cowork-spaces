@@ -81,4 +81,28 @@ public class BookingRepository : IBookingRepository
             throw new DomainException("Booking is already cancelled.");
         }
     }
+
+    public async Task<Booking> UpdateStatusAsync(int id, string status)
+    {
+        using var conn = _connectionFactory.Create();
+        try
+        {
+            return await conn.QuerySingleAsync<Booking>(
+                "sp_UpdateBookingStatus",
+                new { Id = id, Status = status },
+                commandType: CommandType.StoredProcedure);
+        }
+        catch (SqlException ex) when (ex.Message.Contains("BOOKING_NOT_FOUND"))
+        {
+            throw new NotFoundException("Booking", id);
+        }
+        catch (SqlException ex) when (ex.Message.Contains("BOOKING_ALREADY_CANCELLED"))
+        {
+            throw new DomainException("Una reserva cancelada no se puede actualizar.");
+        }
+        catch (SqlException ex) when (ex.Message.Contains("INVALID_STATUS"))
+        {
+            throw new DomainException($"Estado inválido '{status}'. Permitidos: Pendiente, Confirmada, Completada.");
+        }
+    }
 }

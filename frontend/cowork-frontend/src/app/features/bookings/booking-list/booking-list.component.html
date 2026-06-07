@@ -38,7 +38,7 @@
                             <span>{{ space.capacity }} personas</span>
                         </div>
                         <div class="space-info-row">
-                           <!--  <mat-icon class="info-icon">attach_money</mat-icon> -->
+                            <!--  <mat-icon class="info-icon">attach_money</mat-icon> -->
                             <span>{{ space.hourlyRate | currency:'PEN ':'symbol' }} / hora</span>
                         </div>
                     </div>
@@ -104,17 +104,30 @@
                 <ng-container matColumnDef="status">
                     <mat-header-cell *matHeaderCellDef>Estado</mat-header-cell>
                     <mat-cell *matCellDef="let b">
-                        <mat-chip [class]="getStatusClass(b.status)">{{ getStatusName(b.status) }}</mat-chip>
+                        <div class="legend">
+
+                            <span class="legend-item">
+                                <span [class]="getStatusClass(b.status)"></span> {{ getStatusName(b.status) }}
+                            </span>
+                        </div>
                     </mat-cell>
                 </ng-container>
 
                 <ng-container matColumnDef="actions">
                     <mat-header-cell *matHeaderCellDef>Acciones</mat-header-cell>
                     <mat-cell *matCellDef="let b">
-                        <button [disabled]="!authService.isLoggedIn()" mat-button color="warn" *ngIf="b.status === 'Confirmed' || b.status === 'Pending'"
-                            (click)="cancelBooking(b)">
-                            Cancelar
+                        <button *ngIf="b.status !== 'Cancelled'" [disabled]="!authService.isLoggedIn()" mat-icon-button
+                            color="primary" class="booking-action-icon booking-action-icon--manage"
+                            aria-label="Gestionar reserva" title="Gestionar reserva" (click)="openManageDialog(b)">
+                            <mat-icon>manage_accounts</mat-icon>
                         </button>
+                        <button [disabled]="!authService.isLoggedIn()" mat-icon-button color="warn"
+                            class="booking-action-icon booking-action-icon--cancel"
+                            aria-label="Cancelar reserva" title="Cancelar reserva"
+                            *ngIf="b.status === 'Confirmed' || b.status === 'Pending'" (click)="cancelBooking(b)">
+                            <mat-icon>cancel</mat-icon>
+                        </button>
+
                         <span *ngIf="b.status === 'Cancelled'" class="refund-info">
                             Reembolso: {{ b.refundAmount | currency:'PEN ':'symbol' }}
                         </span>
@@ -157,9 +170,16 @@
                         </div>
                     </div>
                     <div class="booking-card-actions">
-                        <button mat-stroked-button color="warn"
+                        <button *ngIf="b.status !== 'Cancelled'" [disabled]="!authService.isLoggedIn()" mat-icon-button color="primary"
+                            class="booking-action-icon booking-action-icon--manage" aria-label="Gestionar reserva"
+                            title="Gestionar reserva" (click)="openManageDialog(b)">
+                            <mat-icon>manage_accounts</mat-icon>
+                        </button>
+                        <button [disabled]="!authService.isLoggedIn()" mat-icon-button color="warn"
+                            class="booking-action-icon booking-action-icon--cancel"
+                            aria-label="Cancelar reserva" title="Cancelar reserva"
                             *ngIf="b.status === 'Confirmed' || b.status === 'Pending'" (click)="cancelBooking(b)">
-                            Cancelar reserva
+                            <mat-icon>cancel</mat-icon>
                         </button>
                         <span *ngIf="b.status === 'Cancelled'" class="refund-info">
                             Reembolso: {{ b.refundAmount | currency:'PEN ':'symbol' }}

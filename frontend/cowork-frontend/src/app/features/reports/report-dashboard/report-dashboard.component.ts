@@ -12,7 +12,6 @@ import { ReportService } from '../../../core/services/report.service';
 import { ReportResult } from '../../../core/models/report.model';
 import { Chart, registerables } from 'chart.js';
 import { MatDatepickerModule } from '@angular/material/datepicker';
-import { MatNativeDateModule } from '@angular/material/core';
 
 Chart.register(...registerables);
 
@@ -30,7 +29,6 @@ Chart.register(...registerables);
     MatProgressSpinnerModule,
     MatIconModule,
     MatDatepickerModule,
-    MatNativeDateModule,
   ],
   templateUrl: 'report-dashboard.component.html',
   styleUrls: ['report-dashboard.component.scss']

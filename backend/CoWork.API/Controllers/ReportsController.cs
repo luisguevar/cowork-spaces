@@ -23,7 +23,7 @@ public class ReportsController : ControllerBase
         [FromQuery] DateTime toDate)
     {
         if (toDate <= fromDate)
-            return BadRequest("End date must be after start date.");
+            return BadRequest("La fecha fin debe ser posterior a la fecha de inicio.");
 
         var report = await _reportService.GetReportAsync(fromDate, toDate);
         return Ok(report);

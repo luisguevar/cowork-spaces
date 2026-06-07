@@ -50,3 +50,8 @@ public class PricePreviewRequest
     public DateTime StartTime { get; set; }
     public DateTime EndTime { get; set; }
 }
+
+public class UpdateBookingStatusRequest
+{
+    public string Status { get; set; } = string.Empty;
+}

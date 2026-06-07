@@ -9,18 +9,39 @@ import { LoginRequest, LoginResponse } from '../models/auth.model';
 })
 export class AuthService {
     private readonly apiUrl = 'http://localhost:5209/api/auth';
+    private readonly storageKey = 'cowork_user';
 
-    currentUser = signal<LoginResponse | null>(null);
+    currentUser = signal<LoginResponse | null>(this.loadFromStorage());
 
     constructor(private http: HttpClient, private router: Router) { }
 
+    private loadFromStorage(): LoginResponse | null {
+        try {
+            const stored = localStorage.getItem(this.storageKey);
+            if (!stored) return null;
+            const user = JSON.parse(stored) as LoginResponse;
+            // Verificar que el token no haya expirado
+            if (new Date(user.expiresAt) < new Date()) {
+                localStorage.removeItem(this.storageKey);
+                return null;
+            }
+            return user;
+        } catch {
+            return null;
+        }
+    }
+
     login(request: LoginRequest): Observable<LoginResponse> {
         return this.http.post<LoginResponse>(`${this.apiUrl}/login`, request).pipe(
-            tap(response => this.currentUser.set(response))
+            tap(response => {
+                localStorage.setItem(this.storageKey, JSON.stringify(response));
+                this.currentUser.set(response);
+            })
         );
     }
 
     logout(): void {
+        localStorage.removeItem(this.storageKey);
         this.currentUser.set(null);
         this.router.navigate(['/login']);
     }

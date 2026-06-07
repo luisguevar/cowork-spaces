@@ -6,10 +6,7 @@ public class PricingEngineTests
 {
     private readonly Domain.Services.PricingEngine _engine = new();
 
-    // Fecha base: lunes, sin hora pico, creada hoy (sin anticipacion)
-    private static readonly DateTime BaseDate = new(2026, 6, 8, 14, 0, 0); // lunes 14:00
     private static readonly DateTime CreatedToday = new(2026, 6, 8, 0, 0, 0);
-    private static readonly DateTime CreatedEarly = new(2026, 5, 28, 0, 0, 0); // 11 dias antes
 
     // =============================================
     // Test 1: Precio base sin modificadores

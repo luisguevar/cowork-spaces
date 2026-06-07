@@ -14,13 +14,13 @@ import {
 export class BookingService {
   private readonly apiUrl = 'http://localhost:5209/api/bookings';
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   getAll(spaceId?: number, userId?: number, status?: string): Observable<Booking[]> {
     let params = new HttpParams();
     if (spaceId) params = params.set('spaceId', spaceId);
-    if (userId)  params = params.set('userId',  userId);
-    if (status)  params = params.set('status',  status);
+    if (userId) params = params.set('userId', userId);
+    if (status) params = params.set('status', status);
     return this.http.get<Booking[]>(this.apiUrl, { params });
   }
 
@@ -34,14 +34,18 @@ export class BookingService {
 
   getPricePreview(request: CreateBookingRequest): Observable<PricePreview> {
     let params = new HttpParams()
-      .set('spaceId',   request.spaceId)
-      .set('userId',    request.userId)
+      .set('spaceId', request.spaceId)
+      .set('userId', request.userId)
       .set('startTime', request.startTime)
-      .set('endTime',   request.endTime);
+      .set('endTime', request.endTime);
     return this.http.get<PricePreview>(`${this.apiUrl}/price-preview`, { params });
   }
 
   cancel(id: number): Observable<CancelBookingResponse> {
     return this.http.patch<CancelBookingResponse>(`${this.apiUrl}/${id}/cancel`, {});
+  }
+  
+  updateStatus(id: number, status: string): Observable<Booking> {
+    return this.http.patch<Booking>(`${this.apiUrl}/${id}/status`, { status });
   }
 }

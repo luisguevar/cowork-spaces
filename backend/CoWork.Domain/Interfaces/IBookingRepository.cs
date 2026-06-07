@@ -8,4 +8,5 @@ public interface IBookingRepository
     Task<Booking?> GetByIdAsync(int id);
     Task<Booking> CreateAsync(Booking booking, decimal finalPrice);
     Task<Booking> CancelAsync(int id, decimal refundAmount);
+    Task<Booking> UpdateStatusAsync(int id, string status);
 }

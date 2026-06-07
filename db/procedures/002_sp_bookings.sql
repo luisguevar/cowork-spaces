@@ -112,7 +112,7 @@ BEGIN
 
         -- Insertar la reserva
         INSERT INTO Bookings (SpaceId, UserId, StartTime, EndTime, Status, FinalPrice, RefundAmount)
-        VALUES (@SpaceId, @UserId, @StartTime, @EndTime, 'Confirmed', @FinalPrice, 0);
+        VALUES (@SpaceId, @UserId, @StartTime, @EndTime, 'Pending', @FinalPrice, 0);
 
         COMMIT TRANSACTION;
 

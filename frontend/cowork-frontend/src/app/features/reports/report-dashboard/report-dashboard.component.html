@@ -6,14 +6,14 @@
         <form [formGroup]="form" (ngSubmit)="loadReport()" class="filter-form">
             <mat-form-field appearance="outline">
                 <mat-label>Desde</mat-label>
-                <input matInput [matDatepicker]="fromPicker" formControlName="fromDate">
+                <input matInput [matDatepicker]="fromPicker" formControlName="fromDate" placeholder="dd/mm/aaaa">
                 <mat-datepicker-toggle matSuffix [for]="fromPicker"></mat-datepicker-toggle>
                 <mat-datepicker #fromPicker></mat-datepicker>
             </mat-form-field>
 
             <mat-form-field appearance="outline">
                 <mat-label>Hasta</mat-label>
-                <input matInput [matDatepicker]="toPicker" formControlName="toDate">
+                <input matInput [matDatepicker]="toPicker" formControlName="toDate" placeholder="dd/mm/aaaa">
                 <mat-datepicker-toggle matSuffix [for]="toPicker"></mat-datepicker-toggle>
                 <mat-datepicker #toPicker></mat-datepicker>
             </mat-form-field>

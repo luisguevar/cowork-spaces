@@ -1,5 +1,5 @@
 <div class="form-container">
-    <h2>Nuevo Ambiente</h2>
+    <h2>{{ isEditMode ? 'Editar Ambiente' : 'Nuevo Ambiente' }}</h2>
 
     <form [formGroup]="form" (ngSubmit)="onSubmit()">
 
@@ -33,6 +33,17 @@
             </mat-error>
         </mat-form-field>
 
+        <mat-form-field *ngIf="isEditMode" appearance="outline" class="full-width">
+            <mat-label>Estado</mat-label>
+            <mat-select formControlName="status">
+                <mat-option value="active">Activo</mat-option>
+                <mat-option value="maintenance">Mantenimiento</mat-option>
+            </mat-select>
+            <mat-error *ngIf="form.get('status')?.hasError('required')">
+                El estado es obligatorio
+            </mat-error>
+        </mat-form-field>
+
         <div class="time-row">
             <mat-form-field appearance="outline" class="half-width">
                 <mat-label>Hora de apertura</mat-label>
@@ -57,7 +68,7 @@
             <button mat-button type="button" (click)="cancel()">Volver</button>
             <button mat-raised-button color="primary" type="submit" [disabled]="form.invalid || loading">
                 <mat-spinner *ngIf="loading" diameter="20" />
-                <span *ngIf="!loading">Crear Ambiente</span>
+                <span *ngIf="!loading">{{ isEditMode ? 'Actualizar Ambiente' : 'Crear Ambiente' }}</span>
             </button>
         </div>
 

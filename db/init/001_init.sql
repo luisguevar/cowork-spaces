@@ -259,7 +259,7 @@ BEGIN
             RETURN;
         END
         INSERT INTO Bookings (SpaceId, UserId, StartTime, EndTime, Status, FinalPrice, RefundAmount)
-        VALUES (@SpaceId, @UserId, @StartTime, @EndTime, 'Confirmed', @FinalPrice, 0);
+        VALUES (@SpaceId, @UserId, @StartTime, @EndTime, 'Pending', @FinalPrice, 0);
         COMMIT TRANSACTION;
         SELECT b.Id, b.SpaceId, s.Name AS SpaceName, b.UserId, u.Name AS UserName,
                b.StartTime, b.EndTime, b.Status, b.FinalPrice, b.RefundAmount, b.CreatedAt, b.UpdatedAt
@@ -307,36 +307,57 @@ CREATE OR ALTER PROCEDURE sp_GetReports
 AS
 BEGIN
     SET NOCOUNT ON;
-    DECLARE @TotalHours DECIMAL(10,2);
-    SET @TotalHours = DATEDIFF(HOUR, @FromDate, @ToDate);
-    SELECT s.Id AS SpaceId, s.Name AS SpaceName, s.HourlyRate,
-           COUNT(b.Id) AS TotalBookings,
-           ISNULL(SUM(DATEDIFF(MINUTE, b.StartTime, b.EndTime)) / 60.0, 0) AS BookedHours,
-           CASE WHEN @TotalHours > 0
-                THEN ROUND(ISNULL(SUM(DATEDIFF(MINUTE, b.StartTime, b.EndTime)) / 60.0, 0) / @TotalHours * 100, 2)
-                ELSE 0 END AS OccupancyRate,
-           ISNULL(SUM(b.FinalPrice), 0) AS TotalRevenue
+
+    -- Calcular dias en el rango
+    DECLARE @TotalDays DECIMAL(10,2);
+    SET @TotalDays = DATEDIFF(DAY, @FromDate, @ToDate);
+
+    -- Ocupacion e ingresos por espacio
+    SELECT
+        s.Id                                                        AS SpaceId,
+        s.Name                                                      AS SpaceName,
+        s.HourlyRate,
+        COUNT(b.Id)                                                 AS TotalBookings,
+        ISNULL(SUM(DATEDIFF(MINUTE, b.StartTime, b.EndTime)) / 60.0, 0)
+                                                                    AS BookedHours,
+       CASE
+        WHEN @TotalDays > 0 
+         AND DATEDIFF(HOUR, s.OpeningTime, s.ClosingTime) > 0
+        THEN ROUND(
+            ISNULL(SUM(DATEDIFF(MINUTE, b.StartTime, b.EndTime)) / 60.0, 0)
+            / NULLIF(
+                @TotalDays * DATEDIFF(HOUR, s.OpeningTime, s.ClosingTime),
+                0)
+            * 100, 2)
+        ELSE 0
+    END AS OccupancyRate,
+        ISNULL(SUM(b.FinalPrice), 0)                                AS TotalRevenue
     FROM Spaces s
     LEFT JOIN Bookings b ON b.SpaceId = s.Id
-        AND b.Status NOT IN ('Cancelled')
+        AND b.Status    NOT IN ('Cancelled')
         AND b.StartTime >= @FromDate
         AND b.EndTime   <= @ToDate
-    GROUP BY s.Id, s.Name, s.HourlyRate
+    GROUP BY s.Id, s.Name, s.HourlyRate, s.OpeningTime, s.ClosingTime
     ORDER BY TotalRevenue DESC;
 
-    SELECT TOP 1 DATEPART(HOUR, StartTime) AS PeakHour, COUNT(*) AS BookingCount
+    -- Horario mas demandado (por hora de inicio)
+    SELECT TOP 1
+        DATEPART(HOUR, StartTime)   AS PeakHour,
+        COUNT(*)                    AS BookingCount
     FROM Bookings
-    WHERE Status NOT IN ('Cancelled')
-      AND StartTime >= @FromDate
-      AND StartTime <= @ToDate
+    WHERE Status    NOT IN ('Cancelled')
+    AND   StartTime >= @FromDate
+    AND   StartTime <= @ToDate
     GROUP BY DATEPART(HOUR, StartTime)
     ORDER BY BookingCount DESC;
 
-    SELECT ISNULL(SUM(FinalPrice), 0) AS TotalRevenue
+    -- Ingresos totales
+    SELECT
+        ISNULL(SUM(FinalPrice), 0) AS TotalRevenue
     FROM Bookings
-    WHERE Status NOT IN ('Cancelled')
-      AND StartTime >= @FromDate
-      AND StartTime <= @ToDate;
+    WHERE Status    NOT IN ('Cancelled')
+    AND   StartTime >= @FromDate
+    AND   StartTime <= @ToDate;
 END
 GO
 
@@ -374,6 +395,42 @@ BEGIN
     WHERE Email = @Email;
 END
 GO
+
+-- =============================================
+-- Stored Procedures: Status
+-- =============================================
+
+CREATE OR ALTER PROCEDURE sp_UpdateBookingStatus
+    @Id     INT,
+    @Status NVARCHAR(20)
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    IF NOT EXISTS (SELECT 1 FROM Bookings WHERE Id = @Id)
+    BEGIN RAISERROR('BOOKING_NOT_FOUND', 16, 1); RETURN; END
+
+    IF EXISTS (SELECT 1 FROM Bookings WHERE Id = @Id AND Status = 'Cancelled')
+    BEGIN RAISERROR('BOOKING_ALREADY_CANCELLED', 16, 1); RETURN; END
+
+    IF @Status NOT IN ('Pending', 'Confirmed', 'Completed')
+    BEGIN RAISERROR('INVALID_STATUS', 16, 1); RETURN; END
+
+    UPDATE Bookings
+    SET Status    = @Status,
+        UpdatedAt = GETUTCDATE()
+    WHERE Id = @Id;
+
+    SELECT b.Id, b.SpaceId, s.Name AS SpaceName, b.UserId, u.Name AS UserName,
+           b.StartTime, b.EndTime, b.Status, b.FinalPrice, b.RefundAmount,
+           b.CreatedAt, b.UpdatedAt
+    FROM Bookings b
+    INNER JOIN Spaces s ON s.Id = b.SpaceId
+    INNER JOIN Users  u ON u.Id = b.UserId
+    WHERE b.Id = @Id;
+END
+GO
+
 
 -- =============================================
 -- Seed
