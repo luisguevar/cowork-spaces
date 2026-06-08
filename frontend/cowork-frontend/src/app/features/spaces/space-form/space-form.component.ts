@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
@@ -9,6 +9,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { SpaceService } from '../../../core/services/space.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-space-form',
@@ -32,7 +33,7 @@ export class SpaceFormComponent {
   error = '';
   isEditMode = false;
   private spaceId: number | null = null;
-
+  private _snackBar = inject(MatSnackBar);
   constructor(
     private fb: FormBuilder,
     private spaceService: SpaceService,
@@ -78,7 +79,7 @@ export class SpaceFormComponent {
     if (this.isEditMode && this.spaceId !== null) {
       this.spaceService.update(this.spaceId, request).subscribe({
         next: () => {
-          alert('Ambiente actualizado correctamente.');
+          this._snackBar.open('Ambiente actualizado correctamente.', 'Cerrar', { duration: 3000 });
           this.router.navigate(['/spaces']);
         },
         error: err => { this.error = err.message; this.loading = false; }
@@ -97,7 +98,7 @@ export class SpaceFormComponent {
       closingTime
     }).subscribe({
       next: () => {
-        alert('Ambiente guardado correctamente.');
+        this._snackBar.open('Ambiente guardado correctamente.', 'Cerrar', { duration: 3000 });
         this.router.navigate(['/spaces']);
       },
       error: err => { this.error = err.message; this.loading = false; }

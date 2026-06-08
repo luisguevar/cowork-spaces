@@ -19,6 +19,7 @@ import { Space } from '../../../core/models/space.model';
 import { SpaceService } from '../../../core/services/space.service';
 import { AuthService } from '../../../core/services/auth.service';
 import { inject } from '@angular/core';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-booking-list',
@@ -53,6 +54,7 @@ export class BookingListComponent implements OnInit {
   pageSize = 10;
 
   private paginator?: MatPaginator;
+  private _snackBar = inject(MatSnackBar);
 
   @ViewChild(MatPaginator)
   set matPaginator(paginator: MatPaginator | undefined) {
@@ -155,11 +157,13 @@ export class BookingListComponent implements OnInit {
 
     this.bookingService.cancel(booking.id).subscribe({
       next: result => {
-        this.successMessage = `Reserva cancelada. ${result.refundDescription}`;
+        this._snackBar.open('Reserva cancelada correctamente.', 'Cerrar', { duration: 3000 });
         this.loadBookings();
-        setTimeout(() => this.successMessage = '', 5000);
       },
-      error: err => this.error = err.message
+      error: err => {
+        this.error = err.message;
+        this._snackBar.open('Error al cancelar la reserva.', 'Cerrar', { duration: 3000 });
+      }
     });
   }
 
@@ -248,6 +252,7 @@ export class BookingManageDialogComponent {
   readonly statusControl = new FormControl<string>(this.data.booking.status);
   loading = false;
   error = '';
+  private _snackBar = inject(MatSnackBar);
 
   save(): void {
     const newStatus = this.statusControl.value;
@@ -259,6 +264,7 @@ export class BookingManageDialogComponent {
     this.bookingService.updateStatus(this.data.booking.id, newStatus).subscribe({
       next: updated => {
         this.loading = false;
+        this._snackBar.open('Estado de reserva actualizado.', 'Cerrar', { duration: 3000 });
         this.dialogRef.close(updated);
       },
       error: err => {

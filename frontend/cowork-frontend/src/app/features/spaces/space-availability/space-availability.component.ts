@@ -42,7 +42,7 @@ import { Booking } from '../../../core/models/booking.model';
           <span class="space-meta">
             <mat-icon>people</mat-icon> {{ space.capacity }} personas &nbsp;|&nbsp;
             <mat-icon>schedule</mat-icon> {{ space.openingTime }} - {{ space.closingTime }} &nbsp;|&nbsp;
-            <mat-icon>attach_money</mat-icon> {{ space.hourlyRate | currency }}/hr
+            <mat-icon>attach_money</mat-icon> {{ space.hourlyRate | currency:'PEN':'symbol':'1.2-2' }}/hr
           </span>
         </div>
         <a mat-raised-button color="primary"
@@ -85,20 +85,20 @@ import { Booking } from '../../../core/models/booking.model';
           </div>
           <div class="detail-row">
             <mat-icon>person</mat-icon>
-            <span>{{ selectedBooking.userName }}</span>
+            <span><b>Usuario:</b> {{ selectedBooking.userName }}</span>
           </div>
           <div class="detail-row">
             <mat-icon>schedule</mat-icon>
-            <span>{{ selectedBooking.startTime | date:'short' }} — {{ selectedBooking.endTime | date:'shortTime' }}</span>
+            <span><b>Horario:</b> {{ selectedBooking.startTime | date:'short' }} — {{ selectedBooking.endTime | date:'shortTime' }}</span>
           </div>
           <div class="detail-row">
             <mat-icon>attach_money</mat-icon>
-            <span>{{ selectedBooking.finalPrice | currency }}</span>
+            <span><b>Precio:</b> {{ selectedBooking.finalPrice | currency:'PEN':'symbol':'1.2-2' }}</span>
           </div>
           <div class="detail-row">
             <mat-icon>info</mat-icon>
             <span [class]="'status-' + selectedBooking.status.toLowerCase()">
-              {{ selectedBooking.status }}
+              <b>Estado:</b> {{ getStatusName(selectedBooking.status) }}
             </span>
           </div>
         </mat-card-content>
@@ -229,5 +229,15 @@ export class SpaceAvailabilityComponent implements OnInit {
   onEventClick(info: any): void {
     const bookingId = info.event.extendedProps['bookingId'];
     this.selectedBooking = this.bookings.find(b => b.id === bookingId) ?? null;
+  }
+
+  getStatusName(status: string): string {
+    const map: Record<string, string> = {
+      Confirmed: 'Confirmado',
+      Pending: 'Pendiente',
+      Cancelled: 'Cancelado',
+      Completed: 'Completado'
+    };
+    return map[status] ?? '';
   }
 }
