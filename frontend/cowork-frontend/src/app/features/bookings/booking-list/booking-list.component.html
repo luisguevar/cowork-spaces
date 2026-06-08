@@ -122,9 +122,9 @@
                             <mat-icon>manage_accounts</mat-icon>
                         </button>
                         <button [disabled]="!authService.isLoggedIn()" mat-icon-button color="warn"
-                            class="booking-action-icon booking-action-icon--cancel"
-                            aria-label="Cancelar reserva" title="Cancelar reserva"
-                            *ngIf="b.status === 'Confirmed' || b.status === 'Pending'" (click)="cancelBooking(b)">
+                            class="booking-action-icon booking-action-icon--cancel" aria-label="Cancelar reserva"
+                            title="Cancelar reserva" *ngIf="b.status === 'Confirmed' || b.status === 'Pending'"
+                            (click)="cancelBooking(b)">
                             <mat-icon>cancel</mat-icon>
                         </button>
 
@@ -170,15 +170,15 @@
                         </div>
                     </div>
                     <div class="booking-card-actions">
-                        <button *ngIf="b.status !== 'Cancelled'" [disabled]="!authService.isLoggedIn()" mat-icon-button color="primary"
-                            class="booking-action-icon booking-action-icon--manage" aria-label="Gestionar reserva"
-                            title="Gestionar reserva" (click)="openManageDialog(b)">
+                        <button *ngIf="b.status !== 'Cancelled'" [disabled]="!authService.isLoggedIn()" mat-icon-button
+                            color="primary" class="booking-action-icon booking-action-icon--manage"
+                            (click)="openManageDialog(b)">
                             <mat-icon>manage_accounts</mat-icon>
                         </button>
-                        <button [disabled]="!authService.isLoggedIn()" mat-icon-button color="warn"
-                            class="booking-action-icon booking-action-icon--cancel"
-                            aria-label="Cancelar reserva" title="Cancelar reserva"
-                            *ngIf="b.status === 'Confirmed' || b.status === 'Pending'" (click)="cancelBooking(b)">
+
+                        <button *ngIf="b.status === 'Confirmed' || b.status === 'Pending'"
+                            [disabled]="!authService.isLoggedIn()" mat-icon-button color="warn"
+                            class="booking-action-icon booking-action-icon--cancel" (click)="cancelBooking(b)">
                             <mat-icon>cancel</mat-icon>
                         </button>
                         <span *ngIf="b.status === 'Cancelled'" class="refund-info">

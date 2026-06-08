@@ -53,17 +53,20 @@
         <ng-container matColumnDef="actions">
             <mat-header-cell *matHeaderCellDef>Acciones</mat-header-cell>
             <mat-cell *matCellDef="let s">
-                <a [routerLink]="['/spaces', s.id, 'edit']" [class.disabled-link]="!authService.isLoggedIn()"
-                    class="action-icon action-icon--primary" mat-icon-button aria-label="Editar ambiente"
-                    title="Editar ambiente">
+                <a [routerLink]="authService.isLoggedIn() ? ['/spaces', s.id, 'edit'] : null"
+                    [class.action-icon--disabled]="!authService.isLoggedIn()" class="action-icon action-icon--primary"
+                    mat-icon-button aria-label="Editar ambiente" title="Editar ambiente">
                     <mat-icon>edit</mat-icon>
                 </a>
-                <button [disabled]="!authService.isLoggedIn()" class="action-icon action-icon--danger" mat-icon-button
-                    color="warn" aria-label="Desactivar ambiente" title="Desactivar ambiente"
-                    *ngIf="s.status === 'active'" (click)="deactivate(s.id)">
+                <button [disabled]="!authService.isLoggedIn()" [class.action-icon--disabled]="!authService.isLoggedIn()"
+                    class="action-icon action-icon--danger" mat-icon-button color="warn"
+                    aria-label="Desactivar ambiente" title="Desactivar ambiente" *ngIf="s.status === 'active'"
+                    (click)="deactivate(s.id)">
                     <mat-icon>block</mat-icon>
                 </button>
-                <a [routerLink]="['/spaces', s.id, 'availability']" class="action-icon action-icon--success"
+
+                <a [routerLink]="authService.isLoggedIn() ? ['/spaces', s.id, 'availability'] : null"
+                    [class.action-icon--disabled]="!authService.isLoggedIn()" class="action-icon action-icon--success"
                     mat-icon-button aria-label="Ver disponibilidad" title="Ver disponibilidad">
                     <mat-icon>schedule</mat-icon>
                 </a>

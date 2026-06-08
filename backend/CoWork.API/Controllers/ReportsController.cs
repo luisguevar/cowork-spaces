@@ -1,5 +1,6 @@
 ﻿using CoWork.Application.Services;
 using CoWork.Domain.DTOs;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CoWork.API.Controllers;
@@ -16,6 +17,7 @@ public class ReportsController : ControllerBase
     }
 
     [HttpGet]
+    [Authorize]
     [ProducesResponseType(typeof(ReportResult), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> GetReport(
