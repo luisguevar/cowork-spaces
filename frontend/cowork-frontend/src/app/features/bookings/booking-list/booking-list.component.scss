@@ -185,25 +185,25 @@
      color: #888;
  }
 
-.booking-action-icon {
-    margin-right: 4px;
-}
+ .booking-action-icon {
+     margin-right: 4px;
+ }
 
-.booking-action-icon--cancel {
-    color: var(--mat-sys-error) !important;
-}
+ .booking-action-icon--cancel {
+     color: var(--mat-sys-error) !important;
+ }
 
-.booking-action-icon--confirm {
-    color: #2e7d32 !important;
-}
+ .booking-action-icon--confirm {
+     color: #2e7d32 !important;
+ }
 
-.booking-action-icon--complete {
-    color: #1565c0 !important;
-}
+ .booking-action-icon--complete {
+     color: #1565c0 !important;
+ }
 
-.booking-action-icon--manage {
-    color: #1976d2 !important;
-}
+ .booking-action-icon--manage {
+     color: #1976d2 !important;
+ }
 
  /* ── Sección ── */
  .spaces-section {
@@ -466,4 +466,10 @@
 
  .dot.completed {
      background: #6a1b9a;
+ }
+
+ .booking-action-icon:disabled,
+ .booking-action-icon:disabled mat-icon {
+     color: #9e9e9e !important;
+     opacity: 0.6;
  }
