@@ -176,7 +176,7 @@ BEGIN
     SET
         Status          = 'Cancelled',
         RefundAmount    = @RefundAmount,
-        UpdatedAt       = GETUTCDATE()
+        UpdatedAt       = GETDATE()
     WHERE Id = @Id;
 
     SELECT

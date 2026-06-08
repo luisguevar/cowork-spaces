@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators, AbstractControl, ValidationErrors } from '@angular/forms';
@@ -20,6 +20,7 @@ import { PricePreview } from '../../../core/models/booking.model';
 import { PricePreviewComponent } from '../price-preview/price-preview.component';
 import { UserService } from '../../../core/services/user.service';
 import { User } from '../../../core/models/user.model';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-booking-form',
@@ -56,6 +57,8 @@ export class BookingFormComponent implements OnInit {
   readonly slotStepMinutes = 30;
   readonly minDurationMinutes = 30;
   readonly maxDurationMinutes = 8 * 60;
+
+  private _snackBar = inject(MatSnackBar);
 
   constructor(
     private fb: FormBuilder,
@@ -361,9 +364,11 @@ export class BookingFormComponent implements OnInit {
   }
 
   onSubmit(): void {
-    if (this.form.invalid || !this.preview) return;
+    if (this.form.invalid || !this.preview) {
+      return;
+    }
 
-    this.loading = false;
+    this.loading = true;
     this.error = '';
     this.conflictError = false;
 
@@ -372,20 +377,34 @@ export class BookingFormComponent implements OnInit {
     const request = {
       spaceId,
       userId,
-      startTime: startTime + ':00',
-      endTime: endTime + ':00'
+      startTime: `${startTime}:00`,
+      endTime: `${endTime}:00`
     };
 
-    this.loading = true;
-
     this.bookingService.create(request).subscribe({
-      next: () => this.router.navigate(['/bookings']),
-      error: err => {
+      next: () => {
+        this._snackBar.open(
+          'Reserva creada correctamente.',
+          'Cerrar',
+          { duration: 3000 }
+        );
+
+        this.router.navigate(['/bookings']);
+      },
+      error: (err) => {
         this.loading = false;
-        if (err.status === 409)
+
+        if (err.status === 409) {
           this.conflictError = true;
-        else
+        } else {
           this.error = err.message;
+        }
+
+        this._snackBar.open(
+          'Error al crear la reserva.',
+          'Cerrar',
+          { duration: 3000 }
+        );
       }
     });
   }

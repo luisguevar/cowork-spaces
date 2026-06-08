@@ -98,4 +98,14 @@ export class BookingCalendarComponent implements OnInit {
     const bookingId = info.event.extendedProps['bookingId'];
     this.selectedBooking = this.bookings.find(b => b.id === bookingId) ?? null;
   }
+
+  getStatusName(status: string): string {
+    const map: Record<string, string> = {
+      Confirmed: 'Confirmado',
+      Pending: 'Pendiente',
+      Cancelled: 'Cancelado',
+      Completed: 'Completado'
+    };
+    return map[status] ?? '';
+  }
 }

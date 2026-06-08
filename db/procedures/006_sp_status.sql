@@ -27,7 +27,7 @@ BEGIN
 
     UPDATE Bookings
     SET Status    = @Status,
-        UpdatedAt = GETUTCDATE()
+        UpdatedAt = GETDATE()
     WHERE Id = @Id;
 
     SELECT b.Id, b.SpaceId, s.Name AS SpaceName, b.UserId, u.Name AS UserName,

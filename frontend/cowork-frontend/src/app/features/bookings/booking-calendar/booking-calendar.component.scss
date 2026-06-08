@@ -58,12 +58,29 @@
      padding: 16px;
  }
 
+ .detail-header {
+     display: flex;
+     justify-content: space-between;
+     align-items: center;
+     margin-bottom: 8px;
+ }
+
  .booking-detail {
      margin-bottom: 16px;
  }
 
  .detail-row {
-     margin-bottom: 8px;
+     display: flex;
+     align-items: center;
+     gap: 8px;
+     padding: 4px 0;
+ }
+
+ .detail-row mat-icon {
+     font-size: 18px;
+     height: 18px;
+     width: 18px;
+     color: #666;
  }
 
  .status-confirmed {

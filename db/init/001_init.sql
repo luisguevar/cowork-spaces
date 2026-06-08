@@ -49,8 +49,8 @@ CREATE TABLE Users (
     Name        NVARCHAR(100)   NOT NULL,
     Email       NVARCHAR(150)   NOT NULL,
     PasswordHash  NVARCHAR(255)   NOT NULL DEFAULT '',
-    CreatedAt   DATETIME2       NOT NULL DEFAULT GETUTCDATE(),
-    UpdatedAt   DATETIME2       NOT NULL DEFAULT GETUTCDATE(),
+    CreatedAt   DATETIME2       NOT NULL DEFAULT GETDATE(),
+    UpdatedAt   DATETIME2       NOT NULL DEFAULT GETDATE(),
     CONSTRAINT PK_Users         PRIMARY KEY (Id),
     CONSTRAINT UQ_Users_Email   UNIQUE (Email)
 );
@@ -67,8 +67,8 @@ CREATE TABLE Spaces (
     OpeningTime     TIME            NOT NULL,
     ClosingTime     TIME            NOT NULL,
     Status          NVARCHAR(20)    NOT NULL DEFAULT 'active',
-    CreatedAt       DATETIME2       NOT NULL DEFAULT GETUTCDATE(),
-    UpdatedAt       DATETIME2       NOT NULL DEFAULT GETUTCDATE(),
+    CreatedAt       DATETIME2       NOT NULL DEFAULT GETDATE(),
+    UpdatedAt       DATETIME2       NOT NULL DEFAULT GETDATE(),
     CONSTRAINT PK_Spaces                PRIMARY KEY (Id),
     CONSTRAINT CK_Spaces_Status         CHECK (Status IN ('active', 'maintenance')),
     CONSTRAINT CK_Spaces_HourlyRate     CHECK (HourlyRate > 0),
@@ -89,8 +89,8 @@ CREATE TABLE Bookings (
     Status          NVARCHAR(20)    NOT NULL DEFAULT 'Pending',
     FinalPrice      DECIMAL(10,2)   NOT NULL,
     RefundAmount    DECIMAL(10,2)   NOT NULL DEFAULT 0,
-    CreatedAt       DATETIME2       NOT NULL DEFAULT GETUTCDATE(),
-    UpdatedAt       DATETIME2       NOT NULL DEFAULT GETUTCDATE(),
+    CreatedAt       DATETIME2       NOT NULL DEFAULT GETDATE(),
+    UpdatedAt       DATETIME2       NOT NULL DEFAULT GETDATE(),
     CONSTRAINT PK_Bookings              PRIMARY KEY (Id),
     CONSTRAINT FK_Bookings_SpaceId      FOREIGN KEY (SpaceId) REFERENCES Spaces(Id),
     CONSTRAINT FK_Bookings_UserId       FOREIGN KEY (UserId)  REFERENCES Users(Id),
@@ -175,7 +175,7 @@ BEGIN
     UPDATE Spaces
     SET Name = @Name, Capacity = @Capacity, HourlyRate = @HourlyRate,
         OpeningTime = @OpeningTime, ClosingTime = @ClosingTime,
-        Status = @Status, UpdatedAt = GETUTCDATE()
+        Status = @Status, UpdatedAt = GETDATE()
     WHERE Id = @Id;
     SELECT Id, Name, Capacity, HourlyRate, OpeningTime, ClosingTime, Status, CreatedAt, UpdatedAt
     FROM Spaces WHERE Id = @Id;
@@ -192,7 +192,7 @@ BEGIN
         RAISERROR('SPACE_NOT_FOUND', 16, 1);
         RETURN;
     END
-    UPDATE Spaces SET Status = 'maintenance', UpdatedAt = GETUTCDATE() WHERE Id = @Id;
+    UPDATE Spaces SET Status = 'maintenance', UpdatedAt = GETDATE() WHERE Id = @Id;
     SELECT Id, Name, Capacity, HourlyRate, OpeningTime, ClosingTime, Status, CreatedAt, UpdatedAt
     FROM Spaces WHERE Id = @Id;
 END
@@ -287,7 +287,7 @@ BEGIN
     BEGIN RAISERROR('BOOKING_ALREADY_COMPLETED', 16, 1); RETURN; END
     IF EXISTS (SELECT 1 FROM Bookings WHERE Id = @Id AND Status = 'Cancelled')
     BEGIN RAISERROR('BOOKING_ALREADY_CANCELLED', 16, 1); RETURN; END
-    UPDATE Bookings SET Status = 'Cancelled', RefundAmount = @RefundAmount, UpdatedAt = GETUTCDATE()
+    UPDATE Bookings SET Status = 'Cancelled', RefundAmount = @RefundAmount, UpdatedAt = GETDATE()
     WHERE Id = @Id;
     SELECT b.Id, b.SpaceId, s.Name AS SpaceName, b.UserId, u.Name AS UserName,
            b.StartTime, b.EndTime, b.Status, b.FinalPrice, b.RefundAmount, b.CreatedAt, b.UpdatedAt
@@ -418,7 +418,7 @@ BEGIN
 
     UPDATE Bookings
     SET Status    = @Status,
-        UpdatedAt = GETUTCDATE()
+        UpdatedAt = GETDATE()
     WHERE Id = @Id;
 
     SELECT b.Id, b.SpaceId, s.Name AS SpaceName, b.UserId, u.Name AS UserName,
@@ -476,18 +476,18 @@ DECLARE @S3 INT = (SELECT Id FROM Spaces WHERE Name = 'Centro Creativo A');
 DECLARE @S4 INT = (SELECT Id FROM Spaces WHERE Name = 'Auditorio General');
 
 INSERT INTO Bookings (SpaceId, UserId, StartTime, EndTime, Status, FinalPrice, RefundAmount) VALUES
-(@S1, @U1, DATEADD(HOUR, 9,  DATEADD(DAY, 1,  CAST(CAST(GETUTCDATE() AS DATE) AS DATETIME2))),
-           DATEADD(HOUR, 11, DATEADD(DAY, 1,  CAST(CAST(GETUTCDATE() AS DATE) AS DATETIME2))), 'Confirmed', 200.00, 0),
-(@S2, @U2, DATEADD(HOUR, 10, DATEADD(DAY, 3,  CAST(CAST(GETUTCDATE() AS DATE) AS DATETIME2))),
-           DATEADD(HOUR, 14, DATEADD(DAY, 3,  CAST(CAST(GETUTCDATE() AS DATE) AS DATETIME2))), 'Confirmed', 230.00, 0),
-(@S3, @U3, DATEADD(HOUR, 14, DATEADD(DAY, 10, CAST(CAST(GETUTCDATE() AS DATE) AS DATETIME2))),
-           DATEADD(HOUR, 18, DATEADD(DAY, 10, CAST(CAST(GETUTCDATE() AS DATE) AS DATETIME2))), 'Pending',   222.00, 0),
-(@S4, @U4, DATEADD(HOUR, 8,  DATEADD(DAY, 5,  CAST(CAST(GETUTCDATE() AS DATE) AS DATETIME2))),
-           DATEADD(HOUR, 10, DATEADD(DAY, 5,  CAST(CAST(GETUTCDATE() AS DATE) AS DATETIME2))), 'Cancelled',  60.00, 60.00),
-(@S1, @U5, DATEADD(HOUR, 9,  DATEADD(DAY, -2, CAST(CAST(GETUTCDATE() AS DATE) AS DATETIME2))),
-           DATEADD(HOUR, 13, DATEADD(DAY, -2, CAST(CAST(GETUTCDATE() AS DATE) AS DATETIME2))), 'Completed', 360.00, 0),
-(@S1, @U2, DATEADD(HOUR, 11, DATEADD(DAY, 1,  CAST(CAST(GETUTCDATE() AS DATE) AS DATETIME2))),
-           DATEADD(HOUR, 13, DATEADD(DAY, 1,  CAST(CAST(GETUTCDATE() AS DATE) AS DATETIME2))), 'Confirmed', 160.00, 0),
-(@S2, @U1, DATEADD(HOUR, 15, DATEADD(DAY, 2,  CAST(CAST(GETUTCDATE() AS DATE) AS DATETIME2))),
-           DATEADD(HOUR, 17, DATEADD(DAY, 2,  CAST(CAST(GETUTCDATE() AS DATE) AS DATETIME2))), 'Cancelled', 100.00, 50.00);
+(@S1, @U1, DATEADD(HOUR, 9,  DATEADD(DAY, 1,  CAST(CAST(GETDATE() AS DATE) AS DATETIME2))),
+           DATEADD(HOUR, 11, DATEADD(DAY, 1,  CAST(CAST(GETDATE() AS DATE) AS DATETIME2))), 'Confirmed', 200.00, 0),
+(@S2, @U2, DATEADD(HOUR, 10, DATEADD(DAY, 3,  CAST(CAST(GETDATE() AS DATE) AS DATETIME2))),
+           DATEADD(HOUR, 14, DATEADD(DAY, 3,  CAST(CAST(GETDATE() AS DATE) AS DATETIME2))), 'Confirmed', 230.00, 0),
+(@S3, @U3, DATEADD(HOUR, 14, DATEADD(DAY, 10, CAST(CAST(GETDATE() AS DATE) AS DATETIME2))),
+           DATEADD(HOUR, 18, DATEADD(DAY, 10, CAST(CAST(GETDATE() AS DATE) AS DATETIME2))), 'Pending',   222.00, 0),
+(@S4, @U4, DATEADD(HOUR, 8,  DATEADD(DAY, 5,  CAST(CAST(GETDATE() AS DATE) AS DATETIME2))),
+           DATEADD(HOUR, 10, DATEADD(DAY, 5,  CAST(CAST(GETDATE() AS DATE) AS DATETIME2))), 'Cancelled',  60.00, 60.00),
+(@S1, @U5, DATEADD(HOUR, 9,  DATEADD(DAY, -2, CAST(CAST(GETDATE() AS DATE) AS DATETIME2))),
+           DATEADD(HOUR, 13, DATEADD(DAY, -2, CAST(CAST(GETDATE() AS DATE) AS DATETIME2))), 'Completed', 360.00, 0),
+(@S1, @U2, DATEADD(HOUR, 11, DATEADD(DAY, 1,  CAST(CAST(GETDATE() AS DATE) AS DATETIME2))),
+           DATEADD(HOUR, 13, DATEADD(DAY, 1,  CAST(CAST(GETDATE() AS DATE) AS DATETIME2))), 'Confirmed', 160.00, 0),
+(@S2, @U1, DATEADD(HOUR, 15, DATEADD(DAY, 2,  CAST(CAST(GETDATE() AS DATE) AS DATETIME2))),
+           DATEADD(HOUR, 17, DATEADD(DAY, 2,  CAST(CAST(GETDATE() AS DATE) AS DATETIME2))), 'Cancelled', 100.00, 50.00);
 GO

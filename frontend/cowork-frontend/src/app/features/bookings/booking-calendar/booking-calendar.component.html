@@ -32,30 +32,39 @@
     <!-- Tooltip de reserva seleccionada -->
     <mat-card *ngIf="selectedBooking" class="booking-detail">
         <mat-card-content>
-            <div class="detail-row">
-                <strong>Ambiente:</strong> {{ selectedBooking.spaceName }}
+            <div class="detail-header">
+                <strong>Detalle de reserva</strong>
+                <button mat-icon-button (click)="selectedBooking = null">
+                    <mat-icon>close</mat-icon>
+                </button>
             </div>
             <div class="detail-row">
-                <strong>Usuario:</strong> {{ selectedBooking.userName }}
+                <mat-icon>meeting_room</mat-icon>
+                <span><b>Ambiente:</b> {{ selectedBooking.spaceName }}</span>
             </div>
             <div class="detail-row">
-                <strong>Inicio:</strong> {{ selectedBooking.startTime | date:'short' }}
+                <mat-icon>person</mat-icon>
+                <span><b>Usuario:</b> {{ selectedBooking.userName }}</span>
             </div>
             <div class="detail-row">
-                <strong>Fin:</strong> {{ selectedBooking.endTime | date:'short' }}
+                <mat-icon>schedule</mat-icon>
+                <span><b>Horario:</b> {{ selectedBooking.startTime | date:'short' }} — {{ selectedBooking.endTime |
+                    date:'shortTime' }}</span>
             </div>
             <div class="detail-row">
-                <strong>Precio:</strong> {{ selectedBooking.finalPrice | currency }}
+                <mat-icon>attach_money</mat-icon>
+                <span><b>Precio:</b> {{ selectedBooking.finalPrice | currency:'PEN':'symbol':'1.2-2' }}</span>
             </div>
             <div class="detail-row">
-                <strong>Estado:</strong>
+                <mat-icon>info</mat-icon>
                 <span [class]="'status-' + selectedBooking.status.toLowerCase()">
-                    {{ selectedBooking.status }}
+                    <b>Estado:</b> {{ getStatusName(selectedBooking.status) }}
                 </span>
             </div>
-            <button mat-button (click)="selectedBooking = null">Cerrar</button>
         </mat-card-content>
     </mat-card>
+
+ 
 
     <full-calendar *ngIf="!loading" [options]="calendarOptions">
     </full-calendar>

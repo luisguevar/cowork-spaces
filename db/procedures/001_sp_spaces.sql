@@ -117,7 +117,7 @@ BEGIN
         OpeningTime = @OpeningTime,
         ClosingTime = @ClosingTime,
         Status      = @Status,
-        UpdatedAt   = GETUTCDATE()
+        UpdatedAt   = GETDATE()
     WHERE Id = @Id;
 
     SELECT
@@ -153,7 +153,7 @@ BEGIN
     UPDATE Spaces
     SET
         Status      = 'maintenance',
-        UpdatedAt   = GETUTCDATE()
+        UpdatedAt   = GETDATE()
     WHERE Id = @Id;
 
     SELECT

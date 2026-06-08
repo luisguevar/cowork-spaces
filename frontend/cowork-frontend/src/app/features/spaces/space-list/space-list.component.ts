@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, inject, OnInit, ViewChild } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { MatTableModule, MatTableDataSource } from '@angular/material/table';
@@ -10,6 +10,7 @@ import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { SpaceService } from '../../../core/services/space.service';
 import { Space } from '../../../core/models/space.model';
 import { AuthService } from '../../../core/services/auth.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-space-list',
@@ -33,7 +34,7 @@ export class SpaceListComponent implements OnInit {
   columns = ['name', 'capacity', 'hourlyRate', 'hours', 'status', 'actions'];
   loading = false;
   error = '';
-
+  private _snackBar = inject(MatSnackBar);
   private paginator?: MatPaginator;
 
   @ViewChild(MatPaginator)
@@ -68,10 +69,27 @@ export class SpaceListComponent implements OnInit {
   }
 
   deactivate(id: number): void {
-    if (!confirm('¿Está seguro de que desea desactivar este ambiente?')) return;
+    if (!confirm('¿Está seguro de que desea desactivar este ambiente?')) {
+      return;
+    }
+
     this.spaceService.deactivate(id).subscribe({
-      next: () => this.loadSpaces(),
-      error: err => this.error = err.message
+      next: () => {
+        this.loadSpaces();
+        this._snackBar.open(
+          'Ambiente desactivado correctamente.',
+          'Cerrar',
+          { duration: 3000 }
+        );
+      },
+      error: (err) => {
+        this.error = err.message;
+        this._snackBar.open(
+          'Error al desactivar el ambiente.',
+          'Cerrar',
+          { duration: 3000 }
+        );
+      }
     });
   }
 
