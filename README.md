@@ -340,7 +340,7 @@ Esto elimina configuraciones manuales y permite levantar el entorno completo con
 
 En conjunto, estas decisiones priorizan simplicidad operativa, testabilidad de la lógica de negocio, control explícito de concurrencia y facilidad de despliegue para el alcance de la solución propuesta.
 
-## Justificación de la estrategia de concurrencia
+## Justificación de la estrategia de concurrencia elegida
 
 El sistema debe garantizar que nunca se confirmen dos reservas solapadas para el mismo espacio, incluso cuando múltiples peticiones lleguen simultáneamente. Se evaluaron tres estrategias antes de elegir.
 
