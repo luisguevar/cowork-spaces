@@ -2,12 +2,13 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Space, CreateSpaceRequest, UpdateSpaceRequest } from '../models/space.model';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class SpaceService {
-  private readonly apiUrl = 'http://localhost:5209/api/spaces';
+  private readonly apiUrl = environment.apiUrl + '/spaces';
 
   constructor(private http: HttpClient) {}
 

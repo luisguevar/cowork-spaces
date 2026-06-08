@@ -7,12 +7,13 @@ import {
   PricePreview,
   CancelBookingResponse
 } from '../models/booking.model';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class BookingService {
-  private readonly apiUrl = 'http://localhost:5209/api/bookings';
+  private readonly apiUrl = environment.apiUrl + '/bookings';
 
   constructor(private http: HttpClient) { }
 

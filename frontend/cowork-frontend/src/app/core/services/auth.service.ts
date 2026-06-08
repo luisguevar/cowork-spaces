@@ -3,12 +3,13 @@ import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { Observable, tap } from 'rxjs';
 import { LoginRequest, LoginResponse } from '../models/auth.model';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
     providedIn: 'root'
 })
 export class AuthService {
-    private readonly apiUrl = 'http://localhost:5209/api/auth';
+    private readonly apiUrl = environment.apiUrl + '/auth';
     private readonly storageKey = 'cowork_user';
 
     currentUser = signal<LoginResponse | null>(this.loadFromStorage());
