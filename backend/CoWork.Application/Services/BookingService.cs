@@ -46,7 +46,7 @@ public class BookingService : IBookingService
             space.HourlyRate,
             request.StartTime,
             request.EndTime,
-            DateTime.UtcNow);
+            DateTime.Now);
 
         return new PricePreviewResponse
         {
