@@ -108,7 +108,7 @@ public class BookingService : IBookingService
         var refund = _cancellationPolicy.CalculateRefund(
             booking.FinalPrice,
             booking.StartTime,
-            DateTime.UtcNow);
+            DateTime.Now);
 
         await _bookingRepository.CancelAsync(id, refund.RefundAmount);
 

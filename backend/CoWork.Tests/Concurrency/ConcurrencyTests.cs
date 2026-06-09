@@ -51,6 +51,8 @@ public class ConcurrencyTests : IClassFixture<WebApplicationFactory<Program>>
         Assert.Equal(1, statusCodes.Count(s => s == HttpStatusCode.Created));
         Assert.Equal(1, statusCodes.Count(s => s == HttpStatusCode.Conflict));
     }
+
+
 }
 
 internal class LoginResult
