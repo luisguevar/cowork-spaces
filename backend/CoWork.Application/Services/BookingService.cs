@@ -46,7 +46,7 @@ public class BookingService : IBookingService
             space.HourlyRate,
             request.StartTime,
             request.EndTime,
-            DateTime.UtcNow);
+            DateTime.Now);
 
         return new PricePreviewResponse
         {
@@ -108,7 +108,7 @@ public class BookingService : IBookingService
         var refund = _cancellationPolicy.CalculateRefund(
             booking.FinalPrice,
             booking.StartTime,
-            DateTime.UtcNow);
+            DateTime.Now);
 
         await _bookingRepository.CancelAsync(id, refund.RefundAmount);
 

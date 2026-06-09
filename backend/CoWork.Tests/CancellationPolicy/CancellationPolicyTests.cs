@@ -127,4 +127,40 @@ public class CancellationPolicyTests
         Assert.Contains("50%", partial.Description);
         Assert.Contains("Sin reembolso", none.Description);
     }
+
+    [Fact]
+    public void CalculateRefund_47Hours55Minutes_Returns50PercentRefund()
+    {
+        var now = DateTime.UtcNow;
+        var startTime = now.AddHours(47).AddMinutes(55);
+
+        var result = _policy.CalculateRefund(200m, startTime, now);
+
+        Assert.Equal(50m, result.RefundPercentage);
+        Assert.Equal(100m, result.RefundAmount);
+    }
+
+    [Fact]
+    public void CalculateRefund_48Hours5Minutes_Returns100PercentRefund()
+    {
+        var now = DateTime.UtcNow;
+        var startTime = now.AddHours(48).AddMinutes(5);
+
+        var result = _policy.CalculateRefund(200m, startTime, now);
+
+        Assert.Equal(100m, result.RefundPercentage);
+        Assert.Equal(200m, result.RefundAmount);
+    }
+
+    [Fact]
+    public void CalculateRefund_24Hours1Minute_Returns50PercentRefund()
+    {
+        var now = DateTime.Now;
+        var startTime = now.AddHours(24).AddMinutes(1);
+
+        var result = _policy.CalculateRefund(200m, startTime, now);
+
+        Assert.Equal(50m, result.RefundPercentage);
+        Assert.Equal(100m, result.RefundAmount);
+    }
 }
