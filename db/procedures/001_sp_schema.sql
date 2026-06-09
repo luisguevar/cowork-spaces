@@ -217,7 +217,7 @@ BEGIN
         (@SpaceId   IS NULL OR b.SpaceId    = @SpaceId)
         AND (@UserId IS NULL OR b.UserId    = @UserId)
         AND (@Status IS NULL OR b.Status    = @Status)
-    ORDER BY b.StartTime DESC;
+    ORDER BY b.CreatedAt DESC;
 END
 GO
 
@@ -430,7 +430,7 @@ BEGIN
 
     -- Horario mas demandado (por hora de inicio)
     SELECT TOP 1
-        DATEPART(HOUR, StartTime)   AS PeakHour,
+        DATEPART(HOUR, StartTime)   AS Hour,
         COUNT(*)                    AS BookingCount
     FROM Bookings
     WHERE Status    NOT IN ('Cancelled')
