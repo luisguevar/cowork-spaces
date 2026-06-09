@@ -308,6 +308,9 @@ AS
 BEGIN
     SET NOCOUNT ON;
 
+    SET @FromDate = CAST(CAST(@FromDate AS DATE) AS DATETIME2);
+    SET @ToDate   = DATEADD(SECOND, -1, DATEADD(DAY, 1, CAST(CAST(@ToDate AS DATE) AS DATETIME2)));
+
     -- Calcular dias en el rango
     DECLARE @TotalDays DECIMAL(10,2);
     SET @TotalDays = DATEDIFF(DAY, @FromDate, @ToDate);
